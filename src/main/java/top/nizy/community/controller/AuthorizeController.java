@@ -9,6 +9,9 @@ import top.nizy.community.dto.AccessTokenDTO;
 import top.nizy.community.dto.GithubUser;
 import top.nizy.community.provider.GithubProvider;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @Classname AuthorizeController
  * @Description TODO
@@ -32,7 +35,8 @@ public class AuthorizeController {
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
-                           @RequestParam(name = "state") String state) {
+                           @RequestParam(name = "state") String state,
+                           HttpServletRequest request) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         //此处设置的是 绑定的这个 Application 的所有者的信息
         accessTokenDTO.setClient_id(clientId);
@@ -42,8 +46,14 @@ public class AuthorizeController {
         accessTokenDTO.setRedirect_uri(redirectUri);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser user = githubProvider.getUser(accessToken);
-        System.out.println(user.getName());
-        //希望登陆成功后，重新返回index页面
-        return "index";
+        if (user != null) {
+            //登陆成功
+            request.getSession().setAttribute("user", user);
+            return "redirect:/";
+        } else {
+            //登陆失败，重新登陆
+            return "redirect:/";
+        }
+
     }
 }
