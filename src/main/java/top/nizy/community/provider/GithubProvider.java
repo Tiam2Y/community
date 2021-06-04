@@ -7,6 +7,7 @@ import top.nizy.community.dto.AccessTokenDTO;
 import top.nizy.community.dto.GithubUser;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Classname GithubProvider
@@ -26,7 +27,14 @@ public class GithubProvider {
     public String getAccessToken(AccessTokenDTO accessTokenDTO) {
         MediaType mediaType = MediaType.get("application/json; charset=utf-8");
 
-        OkHttpClient client = new OkHttpClient();
+        //OkHttpClient client = new OkHttpClient();
+        //Github 访问困难，存在超时会连接的失败问题
+        //在创建时使用构建器设置超时时间
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
         //使用 fastjson 将对象转换为JSON字符串
         //该方法已经过时--到时候再看
         RequestBody body = RequestBody.create(mediaType, JSON.toJSONString(accessTokenDTO));
