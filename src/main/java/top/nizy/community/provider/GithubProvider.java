@@ -29,7 +29,7 @@ public class GithubProvider {
 
         //OkHttpClient client = new OkHttpClient();
         //Github 访问困难，存在超时会连接的失败问题
-        //在创建时使用构建器设置超时时间
+        //在创建时使用构建器设置超时时间--并没有实际多大用处
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
