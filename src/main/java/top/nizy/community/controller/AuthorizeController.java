@@ -11,6 +11,7 @@ import top.nizy.community.mapper.UserMapper;
 import top.nizy.community.model.User;
 import top.nizy.community.provider.GithubProvider;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
@@ -36,13 +37,13 @@ public class AuthorizeController {
     @Value("${github.redirect.uri}")
     private String redirectUri;
 
-    @Autowired
+    @Autowired(required=false)
     private UserMapper userMapper;
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
-                           HttpServletRequest request) {
+                           HttpServletResponse response) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         //此处设置的是 绑定的这个 Application 的所有者的信息
         accessTokenDTO.setClient_id(clientId);
@@ -55,13 +56,22 @@ public class AuthorizeController {
         if (githubUser != null) {
             //登陆成功
             User user = new User();
-            user.setToken(UUID.randomUUID().toString());
+            //自定义生成一个 token -- 然后将其放入 Cookies 中
+            //作为之后持久化登陆的一个验证(口令)
+            String token = UUID.randomUUID().toString();
+            //将登陆的用户信息 存入数据库中(因此不用做session？)
+            user.setToken(token);
             user.setName(githubUser.getName());
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             userMapper.insert(user);
-            request.getSession().setAttribute("user", githubUser);
+
+            //响应
+            Cookie cookie = new Cookie("token", token);
+            //设置 Cookie 生命周期 -- 单位 s -- 如下设置为1个月
+            cookie.setMaxAge(60 * 60 * 24 * 30);
+            response.addCookie(cookie);//--通知客户端保存 Cookies
             return "redirect:/";
         } else {
             //登陆失败，重新登陆
