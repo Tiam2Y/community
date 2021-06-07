@@ -1,23 +1,25 @@
-package top.nizy.community.model;
+package top.nizy.community.dto;
 
 import lombok.Data;
+import top.nizy.community.model.User;
 
 /**
- * @Classname Question
+ * @Classname QuestionDTO
  * @Description TODO
- * @Date 2021/6/7 15:48
+ * @Date 2021/6/7 20:57
  * @Created by NZY271
  */
 @Data
-public class Question {
-    private Long id;
+public class QuestionDTO {
+    private Integer id;
     private String title;
     private String description;
     private String tag;
     private Long gmtCreate;
     private Long gmtModified;
-    private Long creator;
+    private Integer creator;
     private Integer viewCount;
     private Integer commentCount;
     private Integer likeCount;
+    private User user;
 }

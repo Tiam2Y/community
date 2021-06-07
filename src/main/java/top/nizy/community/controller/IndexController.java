@@ -2,12 +2,16 @@ package top.nizy.community.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import top.nizy.community.dto.QuestionDTO;
 import top.nizy.community.mapper.UserMapper;
 import top.nizy.community.model.User;
+import top.nizy.community.service.QuestionService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @Classname IndexController
@@ -24,8 +28,12 @@ public class IndexController {
     @Autowired(required = false)
     private UserMapper userMapper;  //可以操作数据库
 
+    @Autowired
+    private QuestionService questionService;
+
     @GetMapping("/")
-    public String index(HttpServletRequest request) {
+    public String index(HttpServletRequest request,
+                        Model model) {
         //需要获取 Cookie 来判断用户是否是已登录的
         //使用 request 来获取 Cookies
         Cookie[] cookies = request.getCookies();
@@ -42,6 +50,8 @@ public class IndexController {
                 }
             }
         }
+        List<QuestionDTO> questionList = questionService.list();
+        model.addAttribute("questions", questionList);
         return "index";
     }
 }
