@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import top.nizy.community.dto.PaginationDTO;
 import top.nizy.community.dto.QuestionDTO;
 import top.nizy.community.mapper.UserMapper;
 import top.nizy.community.model.User;
@@ -33,7 +35,11 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(HttpServletRequest request,
-                        Model model) {
+                        Model model,
+                        //为了实现分页展示，需要从页面上获取展示的第page页，每页展示size项
+                        //来决定PaginationDTO中参数的设置
+                        @RequestParam(name = "page", defaultValue = "1") Integer page,
+                        @RequestParam(name = "size", defaultValue = "5") Integer size) {
         //需要获取 Cookie 来判断用户是否是已登录的
         //使用 request 来获取 Cookies
         Cookie[] cookies = request.getCookies();
@@ -50,8 +56,10 @@ public class IndexController {
                 }
             }
         }
-        List<QuestionDTO> questionList = questionService.list();
-        model.addAttribute("questions", questionList);
+        //根据page和size确定数据库分页查询limit的参数 offset 和
+        //返回PaginationDTO对象(封装了查询到的每页的内容)
+        PaginationDTO pagination = questionService.list(page, size);
+        model.addAttribute("pagination", pagination);
         return "index";
     }
 }

@@ -37,6 +37,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- 实现热部署的 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <!-- 解决启动服务时的 OkHttp 的jackson的警告 -->
         <dependency>
@@ -58,6 +64,7 @@
             <version>4.9.0</version>
         </dependency>
         <!-- 处理 json 文件？ -->
+        <!-- fastjson 可以 自动把下划线标示映射到驼峰的属性 -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -97,9 +104,6 @@
             <version>1.18.20</version>
             <scope>provided</scope>
         </dependency>
-
-
-
 
     </dependencies>
 
