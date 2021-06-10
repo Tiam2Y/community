@@ -38,10 +38,23 @@ public class QuestionService {
 
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalCount = questionMapper.count();    //获取数据库中总计的数量
-        paginationDTO.setPagination(totalCount, page, size);
+        //计算分页时的总页数
+        Integer totalPage;
+        if (totalCount % size == 0) {
+            totalPage = totalCount / size;
+        } else {
+            totalPage = totalCount / size + 1;
+        }
+        //如果页数越界，进行修改
+        if (page < 1) {
+            page = 1;
+        }
+        if (page > totalPage) {
+            page = totalPage;
+        }
 
-        if (page < 1) page = 1;
-        if (page > paginationDTO.getTotalPage()) page = paginationDTO.getTotalPage();
+        paginationDTO.setPagination(totalPage, page);
+
 
         //计算数据库分页查询时的 offset 和 size
         Integer offset = size * (page - 1);
@@ -50,6 +63,46 @@ public class QuestionService {
 
         for (Question question : questions) {
             User user = userMapper.findByID(question.getCreator());
+            QuestionDTO questionDTO = new QuestionDTO();
+            //将source对象的所有属性拷贝至target对象中
+            BeanUtils.copyProperties(question, questionDTO);
+            questionDTO.setUser(user);
+            questionDTOList.add(questionDTO);
+        }
+        paginationDTO.setData(questionDTOList);
+        return paginationDTO;
+    }
+
+    //用于根据用户ID查找其相关的所有帖子，形成分页内容
+    public PaginationDTO list(Long userId, Integer page, Integer size) {
+
+        PaginationDTO paginationDTO = new PaginationDTO();
+        Integer totalCount = questionMapper.countByCreator(userId);    //获取数据库中总计的数量
+        //计算分页时的总页数
+        Integer totalPage;
+        if (totalCount % size == 0) {
+            totalPage = totalCount / size;
+        } else {
+            totalPage = totalCount / size + 1;
+        }
+        //如果页数越界，进行修改
+        if (page < 1) {
+            page = 1;
+        }
+        if (page > totalPage) {
+            page = totalPage;
+        }
+
+        paginationDTO.setPagination(totalPage, page);
+
+
+        //计算数据库分页查询时的 offset 和 size
+        Integer offset = size * (page - 1);
+        List<Question> questions = questionMapper.listByCreator(userId, offset, size);
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
+
+        User user = userMapper.findByID(userId);
+        for (Question question : questions) {
             QuestionDTO questionDTO = new QuestionDTO();
             //将source对象的所有属性拷贝至target对象中
             BeanUtils.copyProperties(question, questionDTO);

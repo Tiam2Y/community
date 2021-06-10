@@ -22,17 +22,9 @@ public class PaginationDTO {
     private List<Integer> pages = new ArrayList<>();    //跳转页面列表中显示的页面数
     private Integer totalPage;
 
-    public void setPagination(Integer totalCount, Integer page, Integer size) {
-
-        if (totalCount % size == 0)
-            this.totalPage = totalCount / size;
-        else
-            this.totalPage = totalCount / size + 1;
-
-        if (page < 1) page = 1;
-        if (page > this.totalPage) page = this.totalPage;
-
+    public void setPagination(Integer totalPage, Integer page) {
         this.page = page;
+        this.totalPage = totalPage;
 
         pages.add(page);
         //显示当前页面的前3页+后3页(如果存在的话)
