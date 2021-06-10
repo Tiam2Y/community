@@ -105,6 +105,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.webjars/bootstrap &ndash;&gt;-->
+        <!--<dependency>-->
+        <!--    <groupId>org.webjars</groupId>-->
+        <!--    <artifactId>bootstrap</artifactId>-->
+        <!--    <version>3.3.7</version>-->
+        <!--</dependency>-->
+
+
     </dependencies>
 
     <build>

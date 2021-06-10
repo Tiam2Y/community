@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.nizy.community.dto.PaginationDTO;
-import top.nizy.community.mapper.UserMapper;
 import top.nizy.community.model.User;
 import top.nizy.community.service.QuestionService;
 

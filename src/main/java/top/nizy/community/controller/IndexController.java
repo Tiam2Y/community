@@ -27,35 +27,18 @@ import java.util.List;
 @Controller
 public class IndexController {
 
-    @Autowired(required = false)
-    private UserMapper userMapper;  //可以操作数据库
-
     @Autowired
     private QuestionService questionService;
 
     @GetMapping("/")
-    public String index(HttpServletRequest request,
-                        Model model,
+    public String index(Model model,
                         //为了实现分页展示，需要从页面上获取展示的第page页，每页展示size项
                         //来决定PaginationDTO中参数的设置
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
                         @RequestParam(name = "size", defaultValue = "5") Integer size) {
         //需要获取 Cookie 来判断用户是否是已登录的
-        //使用 request 来获取 Cookies
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    User user = userMapper.findByCookie(token);
-                    if (user != null)
-                        //说明数据库保留了该登陆过的用户
-                        //在Session中写入该用户信息--在页面展示
-                        request.getSession().setAttribute("user", user);
-                    break;
-                }
-            }
-        }
+        //直接利用的 SessionInterceptor 中的 preHandler
+
         //根据page和size确定数据库分页查询limit的参数 offset 和
         //返回PaginationDTO对象(封装了查询到的每页的内容)
         PaginationDTO pagination = questionService.list(page, size);

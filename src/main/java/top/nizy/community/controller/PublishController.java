@@ -12,7 +12,6 @@ import top.nizy.community.mapper.UserMapper;
 import top.nizy.community.model.Question;
 import top.nizy.community.model.User;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**

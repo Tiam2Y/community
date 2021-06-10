@@ -39,7 +39,7 @@ public class QuestionService {
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalCount = questionMapper.count();    //获取数据库中总计的数量
         //计算分页时的总页数
-        Integer totalPage;
+        int totalPage;
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
         } else {
