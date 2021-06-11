@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @Created by NZY271
  */
 @Configuration
-//@EnableWebMvc   //会使得样式没有了？默认不对静态资源放行
+//@EnableWebMvc   //会使得默认的自动配置失效，需要自己重新实现
 public class WebConfig implements WebMvcConfigurer {
 
     @Autowired  //此处也需要注入

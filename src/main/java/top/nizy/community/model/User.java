@@ -12,7 +12,7 @@ import lombok.Data;
 public class User {
     private Long id;
     private String name;
-    private String accountId;
+    private String accountId;   //除了id之外，这个accountId才是唯一的(Github中的)
     private String token;
     private Long gmtCreate;
     private Long gmtModified;

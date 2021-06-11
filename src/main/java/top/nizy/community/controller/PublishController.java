@@ -5,12 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import top.nizy.community.dto.QuestionDTO;
 import top.nizy.community.mapper.QuestionMapper;
 import top.nizy.community.mapper.UserMapper;
 import top.nizy.community.model.Question;
 import top.nizy.community.model.User;
+import top.nizy.community.service.QuestionService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,11 +26,32 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class PublishController {
 
-    @Autowired(required = false)
-    private UserMapper userMapper;
 
-    @Autowired(required = false)
-    private QuestionMapper questionMapper;
+    @Autowired
+    private QuestionService questionService;
+
+
+    @GetMapping("/publish/{id}")
+    public String edit(@PathVariable(name = "id") Long id,
+                       Model model,
+                       HttpServletRequest request) {
+
+
+        //根据 ID 获取到这条发布信息
+        QuestionDTO question = questionService.getById(id);
+        User user = (User) request.getSession().getAttribute("user");
+
+        //拦截，不是创建者，不能修改
+        if (question.getCreator().longValue() != user.getId().longValue()) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("title", question.getTitle());
+        model.addAttribute("description", question.getDescription());
+        model.addAttribute("tag", question.getTag());
+        model.addAttribute("id", question.getId());
+        return "publish";
+    }
 
     @GetMapping("/publish")
     public String publish() {
@@ -76,10 +100,8 @@ public class PublishController {
         question.setDescription(description);
         question.setTag(tag);
         question.setCreator(user.getId());
-        question.setGmtCreate(System.currentTimeMillis());
-        question.setGmtModified(question.getGmtCreate());
-
-        questionMapper.create(question);
+        question.setId(id);
+        questionService.createOrUpdate(question);
 
         return "redirect:/";
     }

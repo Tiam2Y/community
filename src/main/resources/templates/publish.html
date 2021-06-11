@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>交流社区</title>
+    <title>发布 - 交流社区</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <!-- 该路径并不能识别到样式 -->
@@ -30,6 +30,8 @@
             <hr/>
 
             <form action="/publish" method="post">
+                <!-- 提交 POST 时会一同被提交至服务器，但是不再页面上显示-->
+                <input type="hidden" name="id" th:value="${id}">
                 <div class="form-group">
                     <label for="title">问题标题（简单扼要）:</label>
                     <input type="text" class="form-control" id="title" name="title" th:value="${title}"

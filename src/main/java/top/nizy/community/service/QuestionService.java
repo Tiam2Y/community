@@ -112,4 +112,33 @@ public class QuestionService {
         paginationDTO.setData(questionDTOList);
         return paginationDTO;
     }
+
+    public QuestionDTO getById(Long id) {
+        //需要使用 QuestionMapper 在数据库中实际查询到该问题
+        Question question = questionMapper.getById(id);
+        //创建一个 DTO 封装这个 question
+        QuestionDTO questionDTO = new QuestionDTO();
+        //将source对象的所有属性拷贝至target对象中
+        // 属性的数据类型需要完全一致(包括基本数据类型)
+        BeanUtils.copyProperties(question, questionDTO);
+        User user = userMapper.findByID(question.getCreator());
+        questionDTO.setUser(user);
+        return questionDTO;
+    }
+
+    public void createOrUpdate(Question question) {
+        if (question.getId() == null) {
+            //创建
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            question.setViewCount(0);
+            question.setLikeCount(0);
+            question.setCommentCount(0);
+            questionMapper.create(question);
+        } else {
+            //更新
+            question.setGmtModified(System.currentTimeMillis());
+            questionMapper.update(question);
+        }
+    }
 }

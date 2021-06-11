@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${question.title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <!-- 该路径并不能识别到样式 -->
+    <!--<link rel="stylesheet" href="../static/css/bootstrap.min.css">-->
+    <!-- 好像可以默认识别到 static 下的目录 -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css">
+
+    <!-- 最新的jquery本地文件，必须在引入bootstrap之前引入 -->
+    <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+
+
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+</head>
+<body>
+<!-- nav 是导航链接 -->
+<!-- 导入 navigation -->
+<div th:insert="~{navigation::nav}"></div>
+
+<!-- 流式布局 -->
+<div class="container-fluid main profile">
+    <div class="row">
+        <!-- 左侧那一列 -->
+        <div class="col-lg-9 col-xs-12 col-sm-12 col-md-12">
+            <div>
+                <h4 class="question-title"><span th:text="${question.title}"></span></h4>
+                <span class="text-desc">
+                作者：<span th:text="${question.user.name}"></span> |
+                发布时间：<span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}"></span> |
+                阅读数： <span th:text="${question.viewCount}"></span>
+                </span>
+            </div>
+            <hr>
+            <div th:text="${question.description}"></div>
+            <hr>
+            <a th:href="@{'/publish/'+${question.id}}" class="community-menu"
+               th:if="${session.user != null && session.user.id == question.creator}">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true">编辑</span>
+            </a>
+        </div>
+
+        <!-- 右侧那一列 -->
+        <div class="col-lg-3 col-xs-12 col-sm-12 col-md-12">
+
+            <h4>发起人</h4>
+            <div class="media">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object img-rounded"
+                             th:src="${question.user.avatarUrl}">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h5 class="media-heading">
+                        <span th:text="${question.user.name}"></span>
+                    </h5>
+                </div>
+            </div>
+            <hr>
+
+            <div>
+                <h4>相关问题</h4>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

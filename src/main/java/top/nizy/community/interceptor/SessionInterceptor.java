@@ -39,6 +39,7 @@ public class SessionInterceptor implements HandlerInterceptor {
                         //说明数据库保留了该登陆过的用户
                         //在Session中写入该用户信息--在页面展示
                         request.getSession().setAttribute("user", user);
+
                     break;
                 }
             }
