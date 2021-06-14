@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.nizy.community.dto.PaginationDTO;
 import top.nizy.community.dto.QuestionDTO;
+import top.nizy.community.exception.CustomizeErrorCode;
+import top.nizy.community.exception.CustomizeException;
 import top.nizy.community.mapper.QuestionMapper;
 import top.nizy.community.mapper.UserMapper;
 import top.nizy.community.model.Question;
@@ -136,6 +138,9 @@ public class QuestionService {
     public QuestionDTO getById(Long id) {
         //需要使用 QuestionMapper 在数据库中实际查询到该问题
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null) {
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         //创建一个 DTO 封装这个 question
         QuestionDTO questionDTO = new QuestionDTO();
         //将source对象的所有属性拷贝至target对象中
@@ -158,7 +163,10 @@ public class QuestionService {
         } else {
             //更新
             question.setGmtModified(System.currentTimeMillis());
-            questionMapper.updateByPrimaryKeySelective(question);
+            int updated = questionMapper.updateByPrimaryKeySelective(question);
+            if (updated != 1) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
     }
 }
