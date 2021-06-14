@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!-- 在 pom.xml 文件的插件中配置了以来之后就可以省略这一部分 -->
+    <!--<classPathEntry location="/Program Files/IBM/SQLLIB/java/db2java.zip" />-->
+
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+
+        <!-- 自带的支持的插件 -->
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
+
+        <jdbcConnection driverClass="org.h2.Driver"
+                        connectionURL="jdbc:h2:F:/JavaWork/community/community"
+                        userId="root"
+                        password="0708">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <!--是否自动转换为 java.Math.BigDecimal -->
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="top.nizy.community.model" targetProject="src/main/java">
+            <!-- 是否自动创建路径 -->
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="top.nizy.community.mapper" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- 与数据库中的 表 进行配置-->
+        <table tableName="user" domainObjectName="User"></table>
+        <table tableName="question" domainObjectName="Question"></table>
+
+    </context>
+</generatorConfiguration>

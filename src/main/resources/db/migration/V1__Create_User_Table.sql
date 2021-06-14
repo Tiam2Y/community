@@ -1,6 +1,6 @@
 create table user
 (
-    id           int auto_increment
+    id           bigint auto_increment
         primary key,
     account_id   varchar(100) null,
     name         varchar(50)  null,

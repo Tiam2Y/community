@@ -6,10 +6,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import top.nizy.community.mapper.UserMapper;
 import top.nizy.community.model.User;
+import top.nizy.community.model.UserExample;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @Classname SessionInterceptor
@@ -34,12 +36,15 @@ public class SessionInterceptor implements HandlerInterceptor {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("token")) {
                     String token = cookie.getValue();
-                    User user = userMapper.findByCookie(token);
-                    if (user != null)
+                    UserExample userExample = new UserExample();
+                    //创建 标准 -- 即向SQL语句中添加条件
+                    userExample.createCriteria()
+                            .andTokenEqualTo(token);
+                    List<User> users = userMapper.selectByExample(userExample);
+                    if (users.size() != 0)
                         //说明数据库保留了该登陆过的用户
                         //在Session中写入该用户信息--在页面展示
-                        request.getSession().setAttribute("user", user);
-
+                        request.getSession().setAttribute("user", users.get(0));
                     break;
                 }
             }

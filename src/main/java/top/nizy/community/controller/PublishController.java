@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.nizy.community.dto.QuestionDTO;
-import top.nizy.community.mapper.QuestionMapper;
-import top.nizy.community.mapper.UserMapper;
 import top.nizy.community.model.Question;
 import top.nizy.community.model.User;
 import top.nizy.community.service.QuestionService;
