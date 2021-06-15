@@ -25,7 +25,10 @@ public class QuestionController {
                            Model model) {
         //根据 ID 获取这个问题(包含其作者信息，因此需要使用DTO)
         Long questionId = Long.parseLong(id);
+        //没有获取到这个数据时会 throw 异常
         QuestionDTO questionDTO = questionService.getById(questionId);
+        //增加阅读数
+        questionService.incView(questionId);
 
         model.addAttribute("question", questionDTO);
 

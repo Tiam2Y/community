@@ -20,10 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("${server.error.path:${error.path:/error}}")
 public class CustomizeErrorController implements ErrorController {
 
-    public String getErrorPath() {
-        return "error";
-    }
-
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView errorHtml(HttpServletRequest request, Model model) {
         HttpStatus status = getStatus(request);

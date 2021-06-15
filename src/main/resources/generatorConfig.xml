@@ -40,6 +40,7 @@
         <!-- 与数据库中的 表 进行配置-->
         <table tableName="user" domainObjectName="User"></table>
         <table tableName="question" domainObjectName="Question"></table>
+        <table tableName="comment" domainObjectName="Comment"></table>
 
     </context>
 </generatorConfiguration>

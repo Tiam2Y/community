@@ -9,6 +9,7 @@ import top.nizy.community.dto.PaginationDTO;
 import top.nizy.community.dto.QuestionDTO;
 import top.nizy.community.exception.CustomizeErrorCode;
 import top.nizy.community.exception.CustomizeException;
+import top.nizy.community.mapper.QuestionExtMapper;
 import top.nizy.community.mapper.QuestionMapper;
 import top.nizy.community.mapper.UserMapper;
 import top.nizy.community.model.Question;
@@ -33,6 +34,9 @@ import java.util.List;
 public class QuestionService {
     @Autowired(required = false)
     private QuestionMapper questionMapper;
+
+    @Autowired(required = false)
+    private QuestionExtMapper questionExtMapper;
 
     @Autowired(required = false)
     private UserMapper userMapper;
@@ -168,5 +172,28 @@ public class QuestionService {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
+    }
+
+    public void incView(Long id) {
+        /*
+        不要使用这种方式
+        当存在并发时，多个用户获取到这个 updateQuestion 对象，里面的数据已经固定
+        此时各自 setViewCount 后更新的数据记录都是同样的，而不是累加的
+         */
+        /*Question question = questionMapper.selectByPrimaryKey(id);
+        Question updateQuestion = new Question();
+        updateQuestion.setViewCount(question.getViewCount() + 1);
+        updateQuestion.setId(id);
+        //对象中为 null 的部分不会更新数据库中的内容
+        questionMapper.updateByPrimaryKeySelective(updateQuestion);*/
+
+        /*
+        更新时使用数据库自带的 自加 则可以避免这一现象
+        自己扩展的方法需要额外构建文件，否则下次 MyBatis自动生成代码时会覆盖原来的文件
+         */
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);   //这是增加的值
+        questionExtMapper.incView(question);
     }
 }
