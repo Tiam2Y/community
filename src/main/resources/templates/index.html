@@ -49,7 +49,14 @@
                     <h4 class="media-heading">
                         <a th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a>
                     </h4>
-                    <span class="label label-info" th:text="${question.tag}"></span>
+                    <!-- 添加标签 -->
+                    <span class="label label-info question-tag" th:each="tag : ${question.tag.split(',|，')}">
+                        <span class="glyphicon glyphicon-tags"></span>
+                        <span th:text="${tag}"></span>
+                        <!--<a th:href="@{/(page=1,tag=${tag})}"-->
+                        <!--   th:text="${tag}" class="community-tag"></a>-->
+                    </span>
+                    <!--<span class="label label-info" th:text="${question.tag}"></span>-->
                     <span class="text-desc">
                         <span th:text="${question.commentCount}"></span>个回复 ·
                         <span th:text="${question.viewCount}"></span> 次浏览 ·

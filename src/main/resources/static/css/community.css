@@ -22,7 +22,7 @@ body {
 }
 
 .text-desc {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: normal;
     color: #999;
 }
@@ -59,10 +59,10 @@ body {
     padding-top: 15px;
     margin-bottom: 15px;
 }
+
 .sub-comments .btn {
     margin: 10px 0;
 }
-
 
 
 .btn-comment {
@@ -78,6 +78,7 @@ body {
     color: #999;
     margin-top: 5px;
 }
+
 .menu .icon {
     margin-right: 6px;
     font-size: 15px;
@@ -89,6 +90,7 @@ body {
     font-size: 15px;
     cursor: pointer;
 }
+
 .menu .active {
     color: #499ef3;
 }
@@ -101,5 +103,20 @@ body {
 
 .question-title {
     margin-top: 25px;
+}
+
+.question-tag {
+    margin-right: 5px;
+}
+
+.question-related {
+    line-height: 20px;
+    font-size: 15px;
+    list-style: none;
+    padding-left: 0;
+}
+
+.question-list {
+    margin: 5px 0;
 }
 

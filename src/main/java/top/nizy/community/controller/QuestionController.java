@@ -34,6 +34,8 @@ public class QuestionController {
         Long questionId = Long.parseLong(id);
         //没有获取到这个数据时会 throw 异常
         QuestionDTO questionDTO = questionService.getById(questionId);
+        //获取与这个问题的标签相关的相关问题
+        List<QuestionDTO> relatedQuestions = questionService.selectRelated(questionDTO);
         //获取这个问题下的所有评论(一级)
         List<CommentDTO> comments = commentService.listByTargetId(questionId, CommentTypeEnum.QUESTION);
         //增加阅读数
@@ -41,6 +43,7 @@ public class QuestionController {
 
         model.addAttribute("question", questionDTO);
         model.addAttribute("comments", comments);
+        model.addAttribute("relatedQuestions", relatedQuestions);
 
         return "question";
     }
