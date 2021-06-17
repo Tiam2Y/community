@@ -5,8 +5,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.nizy.community.dto.CommentDTO;
 import top.nizy.community.dto.QuestionDTO;
+import top.nizy.community.enums.CommentTypeEnum;
+import top.nizy.community.service.CommentService;
 import top.nizy.community.service.QuestionService;
+
+import java.util.List;
 
 /**
  * @Classname QuestionController
@@ -19,6 +24,8 @@ public class QuestionController {
 
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id") String id,
@@ -27,12 +34,14 @@ public class QuestionController {
         Long questionId = Long.parseLong(id);
         //没有获取到这个数据时会 throw 异常
         QuestionDTO questionDTO = questionService.getById(questionId);
+        //获取这个问题下的所有评论(一级)
+        List<CommentDTO> comments = commentService.listByTargetId(questionId, CommentTypeEnum.QUESTION);
         //增加阅读数
         questionService.incView(questionId);
 
         model.addAttribute("question", questionDTO);
+        model.addAttribute("comments", comments);
 
         return "question";
-
     }
 }

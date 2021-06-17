@@ -13,8 +13,17 @@
 
     <!-- 最新的jquery本地文件，必须在引入bootstrap之前引入 -->
     <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
-
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+
+    <script type="application/javascript">
+        window.onload = function () {
+            let closable = window.localStorage.getItem("closable");
+            if (closable === "true") {
+                window.close();
+                window.localStorage.removeItem("closable");
+            }
+        }
+    </script>
 
 </head>
 <body>
@@ -40,7 +49,7 @@
                     <h4 class="media-heading">
                         <a th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a>
                     </h4>
-                    <span th:text="${question.description}"></span>
+                    <span class="label label-info" th:text="${question.tag}"></span>
                     <span class="text-desc">
                         <span th:text="${question.commentCount}"></span>个回复 ·
                         <span th:text="${question.viewCount}"></span> 次浏览 ·

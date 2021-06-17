@@ -67,12 +67,14 @@ public class QuestionService {
 
 
         //计算数据库分页查询时的 offset 和 size
-        Integer offset = size * (page - 1);
+        int offset = size * (page - 1);
         // //会没有 TEXT 类型的数据 -- 为null
         //List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
         //MyBatis查询数据库中 TEXT 类型的数据返回均为空
         //withBLOBs可以解决
-        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.setOrderByClause("gmt_create desc");
+        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(questionExample, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questions) {
@@ -116,9 +118,10 @@ public class QuestionService {
 
 
         //计算数据库分页查询时的 offset 和 size
-        Integer offset = size * (page - 1);
+        int offset = size * (page - 1);
 
         QuestionExample example = new QuestionExample();
+        example.setOrderByClause("gmt_create desc");
         example.createCriteria()
                 .andCreatorEqualTo(userId);
         // //会没有 TEXT 类型的数据 -- 为null
