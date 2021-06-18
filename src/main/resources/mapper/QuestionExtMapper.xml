@@ -42,6 +42,6 @@
     <select id="selectRelated" parameterType="top.nizy.community.model.Question" resultMap="BaseResultMap">
         select *
         from QUESTION
-        where id != #{id} and tag regexp #{tag}
+        where id != #{id} and lower(tag) regexp lower(#{tag})
     </select>
 </mapper>

@@ -15,6 +15,7 @@
     <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/js/community.js" type="application/javascript"></script>
 </head>
 <body>
 <!-- nav 是导航链接的意思 -->
@@ -30,7 +31,7 @@
             <hr/>
 
             <form action="/publish" method="post">
-                <!-- 提交 POST 时会一同被提交至服务器，但是不再页面上显示-->
+                <!-- 提交 POST 时会一同被提交至服务器，但是不在页面上显示-->
                 <input type="hidden" name="id" th:value="${id}">
                 <div class="form-group">
                     <label for="title">问题标题（简单扼要）:</label>
@@ -65,44 +66,43 @@
                     <label for="tag">添加标签:</label>
                     <input type="text" class="form-control" th:value="${tag}" id="tag" name="tag"
                            autocomplete="off"
-                           placeholder="输入标签，以，号分隔"
+                           placeholder="可自定义标签，以,号分隔"
                            onclick="showSelectTag()">
                     <div id="select-tag" class="publish-tag-tab">
                         <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation">
-                                <a aria-controls="home" role="tab"
-                                   data-toggle="tab"></a>
+                            <li role="presentation" th:each="selectCategory,selectCategoryStat: ${tags}"
+                                th:class="${selectCategoryStat.first ? 'active':''}">
+                                <a th:href="${'#'+selectCategory.categoryName}" aria-controls="home" role="tab"
+                                   data-toggle="tab" th:text="${selectCategory.categoryName}"></a>
                             </li>
                         </ul>
                         <div class="tab-content">
-                            <div role="tabpanel">
+                            <div role="tabpanel" th:id="${selectCategory.categoryName}"
+                                 th:each="selectCategory: ${tags}"
+                                 th:class="${selectCategoryStat.first ? 'active tab-pane':'tab-pane'}">
                                 <span>
-                                    <span>
-                                    <span class="community-tag" onclick="selectTag(this)"></span>
+                                    <span class="label label-info question-tag"
+                                          th:each="selectTag: ${selectCategory.tags}">
+
+                                        <span class="glyphicon glyphicon-tags"></span>
+                                        <span class="community-tag" onclick="selectTag(this)"
+                                              th:data-tag="${selectTag}"
+                                              th:text="${' '+selectTag}">
+                                        </span>
                                     </span>
                                 </span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="alert alert-danger" th:if="${error!=null}"
-                     th:text="${error}"></div>
-                <button type="submit" class="btn btn-success btn-publish">
-                    发布
-                </button>
 
-                <!--<div class="container-fluid main ">-->
-                <!--    <div class="row">-->
-                <!--        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">-->
-                <!--            <div class="alert alert-danger" th:text="${error}" th:if="${error!=null}"></div>-->
-                <!--        </div>-->
-                <!--        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">-->
-                <!--            <button type="submit" class="btn btn-success btn-publish ">-->
-                <!--                发布-->
-                <!--            </button>-->
-                <!--        </div>-->
-                <!--    </div>-->
-                <!--</div>-->
+                <!--提示错误信息-->
+                <div class="btn-publish">
+                    <span th:if="${error!=null}" th:text="${error}" class="publish-error"></span>
+                    <button type="submit" class="btn btn-success">
+                        发布
+                    </button>
+                </div>
             </form>
         </div>
 
