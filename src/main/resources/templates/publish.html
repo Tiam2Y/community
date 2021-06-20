@@ -3,19 +3,9 @@
 <head>
     <title>发布 - 交流社区</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <head th:insert="~{import :: head}"></head>
+    <head th:insert="~{import :: markdown}"></head>
 
-    <!-- 该路径并不能识别到样式 -->
-    <!--<link rel="stylesheet" href="../static/css/bootstrap.min.css">-->
-    <!-- 好像可以默认识别到 static 下的目录 -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="/css/community.css">
-
-    <!-- 最新的jquery本地文件，必须在引入bootstrap之前引入 -->
-    <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
-
-    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
-    <script src="/js/community.js" type="application/javascript"></script>
 </head>
 <body>
 <!-- nav 是导航链接的意思 -->
@@ -42,26 +32,27 @@
                 <div class="form-group" id="question-editor" style="z-index: 2">
                     <label for="description">问题补充 (必填，请参照指南提示):</label>
                     <!-- textarea 的回显需要使用 th:text=""  其余的使用 th:value="" -->
-                    <textarea name="description" id="description" th:text="${description}"
+                    <textarea name="description" id="description" th:text="${description}" style="display:none;"
                               class="form-control"
                               cols="30"
-                              rows="10"></textarea>
+                              rows="10">
+                    </textarea>
                 </div>
-                <!--<script type="text/javascript">-->
-                <!--    $(function () {-->
-                <!--        var editor = editormd("question-editor", {-->
-                <!--            width: "100%",-->
-                <!--            height: 350,-->
-                <!--            path: "/js/lib/",-->
-                <!--            delay: 0,-->
-                <!--            watch: false,-->
-                <!--            placeholder: "请输入问题描述",-->
-                <!--            imageUpload: true,-->
-                <!--            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],-->
-                <!--            imageUploadURL: "/file/upload",-->
-                <!--        });-->
-                <!--    });-->
-                <!--</script>-->
+                <script type="text/javascript">
+                    $(function () {
+                        let editor = editormd("question-editor", {
+                            width: "100%",
+                            height: "500",
+                            path: "/js/lib/",
+                            delay: 0,
+                            watch: false,
+                            placeholder: "请输入描述",
+                            imageUpload: true,
+                            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                            imageUploadURL: "/file/upload",
+                        });
+                    });
+                </script>
                 <div class="form-group">
                     <label for="tag">添加标签:</label>
                     <input type="text" class="form-control" th:value="${tag}" id="tag" name="tag"

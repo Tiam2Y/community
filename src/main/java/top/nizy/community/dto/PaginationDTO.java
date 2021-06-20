@@ -12,8 +12,8 @@ import java.util.List;
  * @Created by NZY271
  */
 @Data
-public class PaginationDTO {
-    private List<QuestionDTO> data;   //分页查询到的实际内容
+public class PaginationDTO<T> {
+    private List<T> data;   //分页查询到的实际内容
     private boolean showPrevious;
     private boolean showFirstPage;
     private boolean showNext;
@@ -22,9 +22,22 @@ public class PaginationDTO {
     private List<Integer> pages = new ArrayList<>();    //跳转页面列表中显示的页面数
     private Integer totalPage;
 
-    public void setPagination(Integer totalPage, Integer page) {
+    public void setPagination(Integer totalCount, Integer page, Integer size) {
+        //计算分页时的总页数
+        if (totalCount % size == 0) {
+            this.totalPage = totalCount / size;
+        } else {
+            this.totalPage = totalCount / size + 1;
+        }
+        //页数越界则进行修改
+        if (page < 1) {
+            page = 1;
+        }
+        if (page > totalPage) {
+            page = totalPage;
+        }
+
         this.page = page;
-        this.totalPage = totalPage;
 
         pages.add(page);
         //显示当前页面的前3页+后3页(如果存在的话)
@@ -39,31 +52,15 @@ public class PaginationDTO {
         }
 
         // 是否展示上一页
-        if (page == 1) {
-            showPrevious = false;
-        } else {
-            showPrevious = true;
-        }
+        showPrevious = page != 1;
 
         // 是否展示下一页
-        if (page == totalPage) {
-            showNext = false;
-        } else {
-            showNext = true;
-        }
+        showNext = !page.equals(totalPage);
 
         // 是否展示第一页
-        if (pages.contains(1)) {
-            showFirstPage = false;
-        } else {
-            showFirstPage = true;
-        }
+        showFirstPage = !pages.contains(1);
 
         // 是否展示最后一页
-        if (pages.contains(totalPage)) {
-            showEndPage = false;
-        } else {
-            showEndPage = true;
-        }
+        showEndPage = !pages.contains(totalPage);
     }
 }

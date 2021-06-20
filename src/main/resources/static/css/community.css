@@ -4,7 +4,7 @@ body {
 
 .main {
     background-color: white;
-    margin: 30px;
+    margin: 30px 100px;
 }
 
 .btn-publish {
@@ -17,7 +17,11 @@ body {
     height: 40px;
 }
 
-.media, .showInfo {
+.media {
+    padding: 5px 0;
+}
+
+.showInfo {
     padding: 13px 0;
 }
 
@@ -134,5 +138,9 @@ body {
 
 .publish-error {
     font-size: 18px;
-    color: red;
+    color: #ff0000;
+}
+
+#question-view {
+    border: 1px solid #999;
 }

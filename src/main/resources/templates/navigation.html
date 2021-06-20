@@ -28,6 +28,12 @@
                     <li class="dropdown" th:if="${session.user!=null}">
                         <a href="/publish"><span>发布</span></a>
                     </li>
+                    <!-- 显示通知未读数 -->
+                    <li>
+                        <a href="/profile/replies">
+                            通知 <span class="badge" th:text="${session.unreadCount}"></span>
+                        </a>
+                    </li>
                     <!-- 判断 如果 user==null 说明登录失败 -->
                     <li th:if="${session.user==null}">
                         <a href="https://github.com/login/oauth/authorize?client_id=ad3aafde0ac9783ef322

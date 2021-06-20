@@ -46,27 +46,13 @@ public class QuestionService {
 
     //获取数据库中的Questions列表，并根据 creator 与 User 的ID对应上
     //获得创建者的信息(例如头像)
-    public PaginationDTO list(Integer page, Integer size) {
+    public PaginationDTO<QuestionDTO> list(Integer page, Integer size) {
 
-        PaginationDTO paginationDTO = new PaginationDTO();
         //获取数据库中总计的数量
         int totalCount = (int) questionMapper.countByExample(new QuestionExample());
-        //计算分页时的总页数
-        int totalPage;
-        if (totalCount % size == 0) {
-            totalPage = totalCount / size;
-        } else {
-            totalPage = totalCount / size + 1;
-        }
-        //如果页数越界，进行修改
-        if (page < 1) {
-            page = 1;
-        }
-        if (page > totalPage) {
-            page = totalPage;
-        }
 
-        paginationDTO.setPagination(totalPage, page);
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
+        paginationDTO.setPagination(totalCount, page, size);
 
 
         //计算数据库分页查询时的 offset 和 size
@@ -93,31 +79,16 @@ public class QuestionService {
     }
 
     //用于根据用户ID查找其相关的所有帖子，形成分页内容
-    public PaginationDTO list(Long userId, Integer page, Integer size) {
+    public PaginationDTO<QuestionDTO> list(Long userId, Integer page, Integer size) {
 
-        PaginationDTO paginationDTO = new PaginationDTO();
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria()
                 .andCreatorEqualTo(userId);
         //获取数据库中总计的数量
         int totalCount = (int) questionMapper.countByExample(questionExample);
 
-        //计算分页时的总页数
-        Integer totalPage;
-        if (totalCount % size == 0) {
-            totalPage = totalCount / size;
-        } else {
-            totalPage = totalCount / size + 1;
-        }
-        //如果页数越界，进行修改
-        if (page < 1) {
-            page = 1;
-        }
-        if (page > totalPage) {
-            page = totalPage;
-        }
-
-        paginationDTO.setPagination(totalPage, page);
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
+        paginationDTO.setPagination(totalCount, page, size);
 
 
         //计算数据库分页查询时的 offset 和 size

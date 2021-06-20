@@ -5,12 +5,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import top.nizy.community.mapper.UserMapper;
+import top.nizy.community.model.Notification;
 import top.nizy.community.model.User;
 import top.nizy.community.model.UserExample;
+import top.nizy.community.service.NotificationService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -24,6 +27,9 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     @Autowired(required = false)
     private UserMapper userMapper;
+
+    @Autowired
+    private NotificationService notificationService;
 
     //需要实现三个方法
 
@@ -41,10 +47,14 @@ public class SessionInterceptor implements HandlerInterceptor {
                     userExample.createCriteria()
                             .andTokenEqualTo(token);
                     List<User> users = userMapper.selectByExample(userExample);
-                    if (users.size() != 0)
+                    if (users.size() != 0) {
                         //说明数据库保留了该登陆过的用户
                         //在Session中写入该用户信息--在页面展示
-                        request.getSession().setAttribute("user", users.get(0));
+                        HttpSession session = request.getSession();
+                        session.setAttribute("user", users.get(0));
+                        Long unreadCount = notificationService.unreadCount(users.get(0).getId());
+                        session.setAttribute("unreadCount", unreadCount);
+                    }
                     break;
                 }
             }

@@ -3,21 +3,9 @@
 <head>
     <title th:text="${question.title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <head th:insert="~{import :: head}"></head>
+    <head th:insert="~{import :: markdown}"></head>
 
-    <!-- 该路径并不能识别到样式 -->
-    <!--<link rel="stylesheet" href="../static/css/bootstrap.min.css">-->
-    <!-- 好像可以默认识别到 static 下的目录 -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="/css/community.css">
-
-    <!-- 最新的jquery本地文件，必须在引入bootstrap之前引入 -->
-    <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
-
-
-    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
-    <script src="/js/community.js" type="application/javascript"></script>
-    <script src="/js/moment-2.24.0.min.js" type="application/javascript"></script>
 </head>
 <body>
 <!-- nav 是导航链接 -->
@@ -48,8 +36,15 @@
                 </div>
                 <hr>
                 <!-- 实际的详情内容 -->
-                <div th:text="${question.description}"></div>
-                <hr>
+                <div id="question-view">
+                    <textarea style="display:none;" th:text="${question.description}"></textarea>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        editormd.markdownToHTML("question-view", {});
+                    });
+                </script>
+                <hr style="visibility:hidden">
                 <!-- 添加标签 -->
                 <span class="label label-info question-tag" th:each="tag : ${question.tag.split(',|，')}">
                     <span class="glyphicon glyphicon-tags"></span>

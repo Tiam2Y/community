@@ -3,19 +3,7 @@
 <head>
     <title>个人中心</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-
-    <!-- 该路径并不能识别到样式 -->
-    <!--<link rel="stylesheet" href="../static/css/bootstrap.min.css">-->
-    <!-- 好像可以默认识别到 static 下的目录 -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="/css/community.css">
-
-    <!-- 最新的jquery本地文件，必须在引入bootstrap之前引入 -->
-    <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
-
-
-    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <head th:insert="~{import :: head}"></head>
 </head>
 <body>
 <!-- nav 是导航链接 -->
@@ -29,6 +17,7 @@
         <div class="col-lg-9 col-xs-12 col-sm-12 col-md-12">
             <h3><span th:text="${sectionName}"></span></h3>
             <hr/>
+
             <div class="media" th:each="question:${pagination.data}" th:if="${section == 'questions'}">
                 <div class="media-left">
                     <a href="#">
@@ -37,7 +26,16 @@
                     </a>
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading" th:text="${question.title}"></h4>
+                    <h4 class="media-heading">
+                        <a th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a>
+                    </h4>
+                    <!-- 添加标签 -->
+                    <span class="label label-info question-tag" th:each="tag : ${question.tag.split(',|，')}">
+                        <span class="glyphicon glyphicon-tags"></span>
+                        <span th:text="${tag}"></span>
+                        <!--<a th:href="@{/(page=1,tag=${tag})}"-->
+                        <!--   th:text="${tag}" class="community-tag"></a>-->
+                    </span>
                     <span class="text-desc">
                         <span th:text="${question.commentCount}"></span>个回复 •
                         <span th:text="${question.viewCount}"></span> 次浏览 •
@@ -55,19 +53,19 @@
                 </div>
             </div>
 
-
             <div class="media" th:each="notification : ${pagination.data}" th:if="${section == 'replies'}">
-                <!--<div class="media-body">-->
-                <!--    <p class="media-heading">-->
-                <!--        <span th:text="${notification.notifierName +' ' + notification.typeName + ' '}"></span>-->
-                <!--        <a th:href="@{'/notification/'+ ${notification.id}}"-->
-                <!--           th:text="${notification.outerTitle}">-->
-                <!--        </a>-->
-                <!--        <span class="label label-danger" th:if="${notification.status == 0}">未读</span>-->
-                <!--    </p>-->
-                <!--</div>-->
+                <div class="media-body">
+                    <p class="media-heading">
+                        <span class="label label-danger" th:if="${notification.status == 0}">未读</span>
+                        <span th:text="${notification.notifierName +' ' + notification.typeName + ' '}"></span>
+                        <a th:href="@{'/notification/'+ ${notification.id}}"
+                           th:text="${notification.outerTitle}">
+                        </a>
+                        <br/>
+                        <span th:text="${#dates.format(notification.gmtCreate, 'yyyy-MM-dd HH:mm')}"></span>
+                    </p>
+                </div>
             </div>
-
 
             <nav aria-label="Page navigation">
                 <ul class="pagination">
@@ -111,6 +109,7 @@
                 <a href="/profile/replies"
                    th:class="${section == 'replies'}? 'active list-group-item' : 'list-group-item'">
                     最新回复
+                    <span class="badge" th:text="${session.unreadCount}"></span>
                 </a>
             </div>
         </div>

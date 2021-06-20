@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.nizy.community.dto.CommentDTO;
 import top.nizy.community.enums.CommentTypeEnum;
+import top.nizy.community.enums.NotificationStatusEnum;
+import top.nizy.community.enums.NotificationTypeEnum;
 import top.nizy.community.exception.CustomizeErrorCode;
 import top.nizy.community.exception.CustomizeException;
 import top.nizy.community.mapper.*;
@@ -25,6 +27,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class CommentService {
+    @Autowired(required = false)
+    private UserMapper userMapper;
 
     @Autowired(required = false)
     private CommentMapper commentMapper;
@@ -33,18 +37,19 @@ public class CommentService {
     private QuestionMapper questionMapper;
 
     @Autowired(required = false)
+    private NotificationMapper notificationMapper;
+
+    @Autowired(required = false)
     private QuestionExtMapper questionExtMapper;
 
     @Autowired(required = false)
     private CommentExtMapper commentExtMapper;
 
-    @Autowired(required = false)
-    private UserMapper userMapper;
 
     //用来处理数据库事务的Spring注解 -- 可以注解在任何方法前
     //默认在出现任何异常时 回滚
     @Transactional
-    public void insert(Comment comment) {
+    public void insert(Comment comment, User creator) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }
@@ -52,7 +57,7 @@ public class CommentService {
             throw new CustomizeException(CustomizeErrorCode.TYPE_PARAM_WRONG);
         }
 
-        if (comment.getType() == CommentTypeEnum.COMMENT.getType()) {
+        if (comment.getType().equals(CommentTypeEnum.COMMENT.getType())) {
             /**
              * 回复评论
              */
@@ -61,12 +66,11 @@ public class CommentService {
             if (dbComment == null) {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
-
-//            // 回复问题
-//            Question question = questionMapper.selectByPrimaryKey(dbComment.getParentId());
-//            if (question == null) {
-//                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
-//            }
+            //再在数据库中找到这些评论所在的问题 -- 主要用于显示通知时使用
+            Question question = questionMapper.selectByPrimaryKey(dbComment.getParentId());
+            if (question == null) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
 
             commentMapper.insert(comment);
             //更新相应的回复数量
@@ -75,14 +79,9 @@ public class CommentService {
             parentComment.setCommentCount(1);
             commentExtMapper.incCommentCount(parentComment);
 
-//            // 增加评论数
-//            Comment parentComment = new Comment();
-//            parentComment.setId(comment.getParentId());
-//            parentComment.setCommentCount(1);
-//            commentExtMapper.incCommentCount(parentComment);
-//
-//            // 创建通知
-//            createNotify(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT, question.getId());
+            // 创建通知
+//            createNotify(comment, dbComment.getCommentator(), creator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT, question.getId());
+            createNotify(comment, dbComment.getCommentator(), creator.getName(), NotificationTypeEnum.REPLY_COMMENT, question);
         } else {
             /**
              * 回复问题
@@ -98,11 +97,51 @@ public class CommentService {
             question.setCommentCount(1);
             questionExtMapper.incCommentCount(question);
 
-//            // 创建通知
-//            createNotify(comment, question.getCreator(), commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_QUESTION, question.getId());
+            // 创建通知
+//            createNotify(comment, question.getCreator(), creator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_QUESTION, question.getId());
+            createNotify(comment, question.getCreator(), creator.getName(), NotificationTypeEnum.REPLY_QUESTION, question);
         }
-
     }
+
+    /**
+     * 在向数据库插入新的 comment 时 需要创建通知
+     */
+    private void createNotify(Comment comment, Long receiver, String notifierName, NotificationTypeEnum notificationType, Question question) {
+        //测试的时候把这块删了
+        if (receiver.equals(comment.getCommentator())) {
+            return;
+        }
+        Notification notification = new Notification();
+        notification.setGmtCreate(System.currentTimeMillis());
+        notification.setType(notificationType.getType());
+        notification.setOuterId(question.getId());   //这个通知所链接的问题的ID
+        notification.setNotifier(comment.getCommentator());
+        //默认未读状态
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        notification.setReceiver(receiver);
+        notification.setNotifierName(notifierName);
+        notification.setOuterTitle(question.getTitle());
+        notificationMapper.insert(notification);
+    }
+//    /**
+//     * 在向数据库插入新的 comment 时 需要创建通知
+//     */
+//    private void createNotify(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationType, Long outerId) {
+//        //测试的时候把这块删了
+//        if (receiver.equals(comment.getCommentator())) {
+//            return;
+//        }
+//        Notification notification = new Notification();
+//        notification.setGmtCreate(System.currentTimeMillis());
+//        notification.setType(notificationType.getType());
+//        notification.setOuterId(outerId);   //这个通知所链接的问题的ID
+//        notification.setNotifier(comment.getCommentator());
+//        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+//        notification.setReceiver(receiver);
+//        notification.setNotifierName(notifierName);
+//        notification.setOuterTitle(outerTitle);
+//        notificationMapper.insert(notification);
+//    }
 
     public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
         CommentExample commentExample = new CommentExample();

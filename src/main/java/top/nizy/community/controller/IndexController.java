@@ -41,7 +41,7 @@ public class IndexController {
 
         //根据page和size确定数据库分页查询limit的参数 offset 和
         //返回PaginationDTO对象(封装了查询到的每页的内容)
-        PaginationDTO pagination = questionService.list(page, size);
+        PaginationDTO<QuestionDTO> pagination = questionService.list(page, size);
         model.addAttribute("pagination", pagination);
         return "index";
     }
