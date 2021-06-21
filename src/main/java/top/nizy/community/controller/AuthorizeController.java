@@ -1,5 +1,6 @@
 package top.nizy.community.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -7,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.nizy.community.dto.AccessTokenDTO;
 import top.nizy.community.dto.GithubUser;
-import top.nizy.community.mapper.UserMapper;
 import top.nizy.community.model.User;
 import top.nizy.community.provider.GithubProvider;
 import top.nizy.community.service.UserService;
@@ -15,7 +15,6 @@ import top.nizy.community.service.UserService;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.StringTokenizer;
 import java.util.UUID;
 
 /**
@@ -29,6 +28,7 @@ import java.util.UUID;
  * "@Autowired" 注解 -- 自动装配 使用将 Spring 容器中的 bean 自动的和我们需要这个 bean 的类组装在一起
  */
 @Controller
+@Slf4j  //lombok 中用于日志追加
 public class AuthorizeController {
     @Autowired
     private GithubProvider githubProvider;
@@ -77,6 +77,7 @@ public class AuthorizeController {
             return "redirect:/";
         } else {
             //登陆失败，重新登陆
+            log.error("callback get github error,{}", githubUser);
             return "redirect:/";
         }
     }

@@ -1,0 +1,26 @@
+2021-06-21 20:56:14.341  INFO 17276 --- [restartedMain] top.nizy.community.CommunityApplication  : Starting CommunityApplication using Java 1.8.0_271 on LenovoPC-NZY with PID 17276 (F:\JavaWork\community\target\classes started by NZY271 in F:\JavaWork\community)
+2021-06-21 20:56:14.343  INFO 17276 --- [restartedMain] top.nizy.community.CommunityApplication  : No active profile set, falling back to default profiles: default
+2021-06-21 20:56:14.388  INFO 17276 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-06-21 20:56:14.388  INFO 17276 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-06-21 20:56:15.617  INFO 17276 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8686 (http)
+2021-06-21 20:56:15.624  INFO 17276 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-06-21 20:56:15.625  INFO 17276 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.46]
+2021-06-21 20:56:15.713  INFO 17276 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-06-21 20:56:15.714  INFO 17276 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1324 ms
+2021-06-21 20:56:15.739  INFO 17276 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-06-21 20:56:15.904  INFO 17276 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-06-21 20:56:15.909  INFO 17276 --- [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:F:/JavaWork/community/community'
+2021-06-21 20:56:16.454  INFO 17276 --- [restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2021-06-21 20:56:16.580  INFO 17276 --- [restartedMain] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.7.3 by Redgate
+2021-06-21 20:56:16.595  INFO 17276 --- [restartedMain] o.f.c.i.database.base.DatabaseType       : Database: jdbc:h2:F:/JavaWork/community/community (H2 1.4)
+2021-06-21 20:56:16.653  INFO 17276 --- [restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 9 migrations (execution time 00:00.025s)
+2021-06-21 20:56:16.663  INFO 17276 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": 9
+2021-06-21 20:56:16.667  INFO 17276 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Schema "PUBLIC" is up to date. No migration necessary.
+2021-06-21 20:56:16.756  INFO 17276 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-06-21 20:56:16.780  INFO 17276 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8686 (http) with context path ''
+2021-06-21 20:56:16.788  INFO 17276 --- [restartedMain] top.nizy.community.CommunityApplication  : Started CommunityApplication in 2.9 seconds (JVM running for 4.137)
+2021-06-21 20:56:16.789  INFO 17276 --- [restartedMain] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
+2021-06-21 20:56:16.791  INFO 17276 --- [restartedMain] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+2021-06-21 20:56:22.309  INFO 17276 --- [http-nio-8686-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-06-21 20:56:22.309  INFO 17276 --- [http-nio-8686-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-06-21 20:56:22.310  INFO 17276 --- [http-nio-8686-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms

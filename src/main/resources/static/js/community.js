@@ -64,6 +64,7 @@ function comment2target(targetId, type, content) {
 function collapseComments(e) {
     let id = e.getAttribute("data-id");
     let subCommentContainer = $("#comment-" + id);
+
     // 如果二级评论中只有一个子元素 -- 那个新增评论的输入框
     // 则获取JSON并渲染二级评论页面，否则不渲染
     if (subCommentContainer.children().length === 1) {
@@ -147,8 +148,7 @@ function selectTag(e) {
             //若value没有作为一个独立的标签出现过
             $("#tag").val(previous + ',' + value);
         }
-    }
-    else {
+    } else {
         $("#tag").val(value);
     }
 }

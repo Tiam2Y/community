@@ -44,4 +44,21 @@
         from QUESTION
         where id != #{id} and lower(tag) regexp lower(#{tag})
     </select>
+    <select id="countBySearch" parameterType="top.nizy.community.dto.QuestionQueryDTO" resultType="java.lang.Integer">
+        select count(*) from QUESTION
+        <where>
+            <if test="search != '' and search != null">
+                and title regexp #{search}
+            </if>
+        </where>
+    </select>
+    <select id="selectBySearch" parameterType="top.nizy.community.dto.QuestionQueryDTO" resultMap="BaseResultMap">
+        select * from QUESTION
+        <where>
+            <if test="search != '' and search != null">
+                and title regexp #{search}
+            </if>
+        </where>
+        order by gmt_create desc limit #{page}, #{size}
+    </select>
 </mapper>

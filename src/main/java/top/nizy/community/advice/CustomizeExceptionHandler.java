@@ -1,5 +1,6 @@
 package top.nizy.community.advice;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * 处理不了的异常(比如 404 之类的)，可以在 ErrorController 中处理
  */
 @ControllerAdvice
+@Slf4j
 public class CustomizeExceptionHandler {
 
     @ExceptionHandler(Exception.class)
@@ -35,6 +37,7 @@ public class CustomizeExceptionHandler {
             if (ex instanceof CustomizeException) {
                 return ResultDTO.errorOf((CustomizeException) ex);
             } else {
+                log.error("handle error", ex);
                 //未知异常，进行统一显示
                 return ResultDTO.errorOf(CustomizeErrorCode.SYS_ERROR);
             }
@@ -45,6 +48,7 @@ public class CustomizeExceptionHandler {
                 model.addAttribute("message", ex.getMessage());
             } else {
                 //未知异常，进行统一显示
+                log.error("handle error", ex);
                 model.addAttribute("message", CustomizeErrorCode.SYS_ERROR.getMessage());  //写入错误信息
             }
             return new ModelAndView("error");

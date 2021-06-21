@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.nizy.community.dto.PaginationDTO;
 import top.nizy.community.dto.QuestionDTO;
+import top.nizy.community.dto.QuestionQueryDTO;
 import top.nizy.community.exception.CustomizeErrorCode;
 import top.nizy.community.exception.CustomizeException;
 import top.nizy.community.mapper.QuestionExtMapper;
@@ -46,10 +47,25 @@ public class QuestionService {
 
     //获取数据库中的Questions列表，并根据 creator 与 User 的ID对应上
     //获得创建者的信息(例如头像)
-    public PaginationDTO<QuestionDTO> list(Integer page, Integer size) {
+    public PaginationDTO<QuestionDTO> list(String search, Integer page, Integer size) {
 
-        //获取数据库中总计的数量
-        int totalCount = (int) questionMapper.countByExample(new QuestionExample());
+        if (StringUtils.isNotBlank(search)) {
+            //根据传入的参数构建搜索时的匹配模式
+            String[] tags = StringUtils.split(search, " ");
+            search = Arrays
+                    .stream(tags)
+                    .filter(StringUtils::isNotBlank)
+                    .map(t -> t.replace("+", "").replace("*", "").replace("?", ""))
+                    .filter(StringUtils::isNotBlank)
+                    .collect(Collectors.joining("|"));
+        }
+
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+
+//        //获取数据库中总计的数量
+//        int totalCount = (int) questionMapper.countByExample(new QuestionExample());
+        int totalCount = questionExtMapper.countBySearch(questionQueryDTO);
 
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         paginationDTO.setPagination(totalCount, page, size);
@@ -57,13 +73,9 @@ public class QuestionService {
 
         //计算数据库分页查询时的 offset 和 size
         int offset = size * (page - 1);
-        // //会没有 TEXT 类型的数据 -- 为null
-        //List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
-        //MyBatis查询数据库中 TEXT 类型的数据返回均为空
-        //withBLOBs可以解决
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmt_create desc");
-        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(questionExample, new RowBounds(offset, size));
+        questionQueryDTO.setPage(offset);
+        questionQueryDTO.setSize(size);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questions) {
