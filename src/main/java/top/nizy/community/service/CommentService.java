@@ -80,7 +80,6 @@ public class CommentService {
             commentExtMapper.incCommentCount(parentComment);
 
             // 创建通知
-//            createNotify(comment, dbComment.getCommentator(), creator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT, question.getId());
             createNotify(comment, dbComment.getCommentator(), creator.getName(), NotificationTypeEnum.REPLY_COMMENT, question);
         } else {
             /**
@@ -91,14 +90,12 @@ public class CommentService {
             if (question == null) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
-//            comment.setCommentCount(0);
             //可能存在事务要求——整个事务回滚/提交
             commentMapper.insert(comment);
             question.setCommentCount(1);
             questionExtMapper.incCommentCount(question);
 
             // 创建通知
-//            createNotify(comment, question.getCreator(), creator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_QUESTION, question.getId());
             createNotify(comment, question.getCreator(), creator.getName(), NotificationTypeEnum.REPLY_QUESTION, question);
         }
     }
@@ -123,25 +120,6 @@ public class CommentService {
         notification.setOuterTitle(question.getTitle());
         notificationMapper.insert(notification);
     }
-//    /**
-//     * 在向数据库插入新的 comment 时 需要创建通知
-//     */
-//    private void createNotify(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationType, Long outerId) {
-//        //测试的时候把这块删了
-//        if (receiver.equals(comment.getCommentator())) {
-//            return;
-//        }
-//        Notification notification = new Notification();
-//        notification.setGmtCreate(System.currentTimeMillis());
-//        notification.setType(notificationType.getType());
-//        notification.setOuterId(outerId);   //这个通知所链接的问题的ID
-//        notification.setNotifier(comment.getCommentator());
-//        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
-//        notification.setReceiver(receiver);
-//        notification.setNotifierName(notifierName);
-//        notification.setOuterTitle(outerTitle);
-//        notificationMapper.insert(notification);
-//    }
 
     public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
         CommentExample commentExample = new CommentExample();

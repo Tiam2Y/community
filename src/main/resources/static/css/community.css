@@ -42,6 +42,10 @@ body {
     margin-bottom: 15px;
 }
 
+.community-tag{
+    color: white;
+}
+
 .jumbotron {
     margin: 100px;
 }

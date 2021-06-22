@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import top.nizy.community.dto.PaginationDTO;
 import top.nizy.community.dto.QuestionDTO;
 import top.nizy.community.dto.QuestionQueryDTO;
+import top.nizy.community.enums.SortEnum;
 import top.nizy.community.exception.CustomizeErrorCode;
 import top.nizy.community.exception.CustomizeException;
 import top.nizy.community.mapper.QuestionExtMapper;
@@ -47,10 +48,13 @@ public class QuestionService {
 
     //获取数据库中的Questions列表，并根据 creator 与 User 的ID对应上
     //获得创建者的信息(例如头像)
-    public PaginationDTO<QuestionDTO> list(String search, Integer page, Integer size) {
-
+    public PaginationDTO<QuestionDTO> list(String search, String tag, String sort, Integer page, Integer size) {
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        //处理搜索
         if (StringUtils.isNotBlank(search)) {
             //根据传入的参数构建搜索时的匹配模式
+            //先统一为小写
+            search = search.toLowerCase();
             String[] tags = StringUtils.split(search, " ");
             search = Arrays
                     .stream(tags)
@@ -59,17 +63,33 @@ public class QuestionService {
                     .filter(StringUtils::isNotBlank)
                     .collect(Collectors.joining("|"));
         }
-
-        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
         questionQueryDTO.setSearch(search);
+        //处理标签点击时的搜索
+        if (StringUtils.isNotBlank(tag)) {
+            tag = tag.replace("+", "").replace("*", "").replace("?", "").toLowerCase();
+            questionQueryDTO.setTag(tag);
+        }
+
+        //处理主页上的分列选项
+        for (SortEnum sortEnum : SortEnum.values()) {
+            if (sortEnum.name().toLowerCase().equals(sort)) {
+                questionQueryDTO.setSort(sort);
+
+                if (sortEnum == SortEnum.HOT7) {
+                    questionQueryDTO.setTime(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 7);
+                }
+                if (sortEnum == SortEnum.HOT30) {
+                    questionQueryDTO.setTime(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 30);
+                }
+                break;
+            }
+        }
 
 //        //获取数据库中总计的数量
-//        int totalCount = (int) questionMapper.countByExample(new QuestionExample());
         int totalCount = questionExtMapper.countBySearch(questionQueryDTO);
 
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         paginationDTO.setPagination(totalCount, page, size);
-
 
         //计算数据库分页查询时的 offset 和 size
         int offset = size * (page - 1);

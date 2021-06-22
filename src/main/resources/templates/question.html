@@ -47,10 +47,12 @@
                 <hr style="visibility:hidden">
                 <!-- 添加标签 -->
                 <span class="label label-info question-tag" th:each="tag : ${question.tag.split(',|，')}">
-                    <span class="glyphicon glyphicon-tags"></span>
-                    <span th:text="${tag.toLowerCase()}"></span>
-                    <!--<a th:href="@{/(page=1,tag=${tag})}"-->
-                    <!--   th:text="${tag}" class="community-tag"></a>-->
+                    <!--<span class="glyphicon glyphicon-tags"></span>-->
+                    <!--<span th:text="${tag.toLowerCase()}"></span>-->
+                    <a th:href="@{/(page=1,tag=${tag})}" class="community-tag">
+                        <span class="glyphicon glyphicon-tags"></span>
+                        <span th:text="${tag.toLowerCase()}"></span>
+                    </a>
                 </span>
                 <hr>
             </div>

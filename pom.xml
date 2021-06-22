@@ -17,6 +17,22 @@
         <java.version>1.8</java.version>
     </properties>
 
+    <!-- maven 多环境分离 -->
+    <profiles>
+        <profile>
+            <!-- 默认是使用的 dev -->
+            <id>dev</id>
+            <properties>
+                <db.url>jdbc:h2:F:/JavaWork/community/community</db.url>
+                <db.user>root</db.user>
+                <db.password>0708</db.password>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
+
 
     <dependencies>
 
@@ -83,10 +99,6 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>2.2.0</version>
         </dependency>
-        <!--<dependency>-->
-        <!--    <groupId>com.h2database</groupId>-->
-        <!--    <artifactId>h2</artifactId>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -104,15 +116,6 @@
             <version>1.18.20</version>
             <scope>provided</scope>
         </dependency>
-
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.webjars/bootstrap &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--    <groupId>org.webjars</groupId>-->
-        <!--    <artifactId>bootstrap</artifactId>-->
-        <!--    <version>3.3.7</version>-->
-        <!--</dependency>-->
-
-
     </dependencies>
 
     <build>
@@ -127,9 +130,9 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>7.9.2</version>
                 <configuration>
-                    <url>jdbc:h2:F:/JavaWork/community/community</url>
-                    <user>root</user>
-                    <password>0708</password>
+                    <url>${db.url}</url>
+                    <user>${db.user}</user>
+                    <password>${db.password}</password>
                 </configuration>
                 <dependencies>
                     <dependency>

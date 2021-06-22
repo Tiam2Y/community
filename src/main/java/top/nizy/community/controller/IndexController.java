@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import top.nizy.community.cache.HotTagCache;
 import top.nizy.community.dto.PaginationDTO;
 import top.nizy.community.dto.QuestionDTO;
 import top.nizy.community.mapper.UserMapper;
@@ -30,24 +31,31 @@ public class IndexController {
     @Autowired
     private QuestionService questionService;
 
+    //用来读取隔一段时间更新的缓存的热门标签
+    @Autowired
+    private HotTagCache hotTagCache;
+
     @GetMapping("/")
     public String index(Model model,
                         //为了实现分页展示，需要从页面上获取展示的第page页，每页展示size项
                         //来决定PaginationDTO中参数的设置
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
-                        @RequestParam(name = "size", defaultValue = "5") Integer size,
-                        @RequestParam(name = "search", required = false, defaultValue = "") String search) {
+                        @RequestParam(name = "size", defaultValue = "10") Integer size,
+                        @RequestParam(name = "search", required = false, defaultValue = "") String search,
+                        @RequestParam(name = "tag", required = false) String tag,
+                        @RequestParam(name = "sort", required = false) String sort) {
         //需要获取 Cookie 来判断用户是否是已登录的
         //直接利用的 SessionInterceptor 中的 preHandler
 
         //根据page和size确定数据库分页查询limit的参数 offset 和
         //返回PaginationDTO对象(封装了查询到的每页的内容)
-        PaginationDTO<QuestionDTO> pagination = questionService.list(search, page, size);
+        PaginationDTO<QuestionDTO> pagination = questionService.list(search, tag, sort, page, size);
+        List<String> tags = hotTagCache.getHots();
         model.addAttribute("pagination", pagination);
         model.addAttribute("search", search);
-//        model.addAttribute("tag", tag);
-//        model.addAttribute("tags", tags);
-//        model.addAttribute("sort", sort);
+        model.addAttribute("tag", tag);
+        model.addAttribute("tags", tags);
+        model.addAttribute("sort", sort);
         return "index";
     }
 }

@@ -42,23 +42,63 @@
     <select id="selectRelated" parameterType="top.nizy.community.model.Question" resultMap="BaseResultMap">
         select *
         from QUESTION
-        where id != #{id} and lower(tag) regexp lower(#{tag})
+        <where>
+            <if test="id != null">
+                and id != #{id}
+            </if>
+            <if test="tag != null and tag != ''">
+                and lower(tag) regexp lower(#{tag})
+            </if>
+        </where>
+        order by gmt_create desc limit 20
     </select>
     <select id="countBySearch" parameterType="top.nizy.community.dto.QuestionQueryDTO" resultType="java.lang.Integer">
         select count(*) from QUESTION
         <where>
-            <if test="search != '' and search != null">
+            <if test="search != null and search != ''">
                 and title regexp #{search}
+                or lower(tag) regexp #{search}
+            </if>
+            <if test="tag != null and tag != ''">
+                and lower(tag) regexp #{tag}
+            </if>
+            <if test="sort != null and sort != '' and sort == 'no'">
+                and comment_count = 0
+            </if>
+            <if test="time != null and time != ''">
+                and gmt_create > #{time}
             </if>
         </where>
     </select>
     <select id="selectBySearch" parameterType="top.nizy.community.dto.QuestionQueryDTO" resultMap="BaseResultMap">
         select * from QUESTION
         <where>
-            <if test="search != '' and search != null">
+            <if test="search != null and search != ''">
                 and title regexp #{search}
+                or lower(tag) regexp #{search}
+            </if>
+            <if test="tag != null and tag != ''">
+                and lower(tag) regexp #{tag}
+            </if>
+            <if test="sort != null and sort != '' and sort == 'no'">
+                and comment_count = 0
+            </if>
+            <if test="time != null and time != ''">
+                and gmt_create > #{time}
             </if>
         </where>
-        order by gmt_create desc limit #{page}, #{size}
+        <if test="sort == null or sort == ''">
+            order by gmt_create desc
+        </if>
+        <if test="sort != null and sort != '' and sort == 'new'">
+            order by gmt_create desc
+        </if>
+        <if test="sort != null and sort != '' and sort == 'no'">
+            order by gmt_create desc
+        </if>
+        <if test="sort != null and sort != '' and (sort == 'hot' || sort == 'hot7' || sort == 'hot30')">
+            order by comment_count desc
+        </if>
+        limit #{page}, #{size}
     </select>
 </mapper>
