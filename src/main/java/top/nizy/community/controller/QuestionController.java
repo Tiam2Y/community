@@ -3,15 +3,22 @@ package top.nizy.community.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import top.nizy.community.dto.CommentDTO;
 import top.nizy.community.dto.QuestionDTO;
+import top.nizy.community.dto.ResultDTO;
 import top.nizy.community.enums.CommentTypeEnum;
+import top.nizy.community.exception.CustomizeErrorCode;
+import top.nizy.community.exception.CustomizeException;
+import top.nizy.community.mapper.QuestionMapper;
+import top.nizy.community.model.User;
 import top.nizy.community.service.CommentService;
 import top.nizy.community.service.QuestionService;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Classname QuestionController
@@ -26,6 +33,9 @@ public class QuestionController {
     private QuestionService questionService;
     @Autowired
     private CommentService commentService;
+
+    @Autowired(required = false)
+    private QuestionMapper questionMapper;
 
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id") String id,
@@ -44,7 +54,27 @@ public class QuestionController {
         model.addAttribute("question", questionDTO);
         model.addAttribute("comments", comments);
         model.addAttribute("relatedQuestions", relatedQuestions);
-
         return "question";
+    }
+
+    @RequestMapping(value = "/question/del/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public Object delQuestionById(HttpServletRequest request,
+                                  @PathVariable(name = "id") Long id) {
+
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            throw new CustomizeException(CustomizeErrorCode.NO_LOGIN);
+        }
+        if (id == null) {
+            throw new CustomizeException(CustomizeErrorCode.SYS_ERROR);
+        } else {
+            int c = questionMapper.deleteByPrimaryKey(id);
+            if (c == 0) {
+                return ResultDTO.errorOf(CustomizeErrorCode.QUESTION_DELETED);
+            } else {
+                return ResultDTO.ok();
+            }
+        }
     }
 }

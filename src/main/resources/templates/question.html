@@ -26,13 +26,20 @@
                 发布时间：<span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}"></span> |
                 阅读数： <span th:text="${question.viewCount}"></span>
                     </span>
+                    <br>
                     <!-- 是否显示编辑按钮 -->
-                    <a th:href="@{'/publish/'+${question.id}}" class="community-menu"
+                    <a th:href="@{'/publish/'+${question.id}}" class="community-menu btn-margin"
                        th:if="${session.user != null && session.user.id == question.creator}">
                         <span class="label label-default" aria-hidden="true">
                             <span class="glyphicon glyphicon-pencil"></span>编辑
                         </span>
                     </a>
+                    <span onclick="deleteTalk(this)" th:data-id="${question.id}" class="btn-margin"
+                          th:if="${session.user != null && session.user.id == question.creator}">
+                        <span class="label label-danger" aria-hidden="true">
+                            <span class="glyphicon glyphicon-remove"></span>删除
+                        </span>
+                    </span>
                 </div>
                 <hr>
                 <!-- 实际的详情内容 -->
@@ -164,6 +171,7 @@
         </div>
     </div>
 </div>
+
 <div th:insert="~{footer :: foot}"></div>
 </body>
 </html>

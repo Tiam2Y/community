@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 public class HotTagDTO implements Comparable {
     private String name;
     private Integer priority;
+    private Long talkNums;
+    private Long commentNums;
 
     @Override
     public int compareTo(@NotNull Object o) {

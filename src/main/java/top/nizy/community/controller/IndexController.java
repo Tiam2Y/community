@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.nizy.community.cache.HotTagCache;
+import top.nizy.community.dto.HotTagDTO;
 import top.nizy.community.dto.PaginationDTO;
 import top.nizy.community.dto.QuestionDTO;
 import top.nizy.community.mapper.UserMapper;
@@ -50,11 +51,11 @@ public class IndexController {
         //根据page和size确定数据库分页查询limit的参数 offset 和
         //返回PaginationDTO对象(封装了查询到的每页的内容)
         PaginationDTO<QuestionDTO> pagination = questionService.list(search, tag, sort, page, size);
-        List<String> tags = hotTagCache.getHots();
+        List<HotTagDTO> hotTags = hotTagCache.getHots();
         model.addAttribute("pagination", pagination);
         model.addAttribute("search", search);
         model.addAttribute("tag", tag);
-        model.addAttribute("tags", tags);
+        model.addAttribute("hotTags", hotTags);
         model.addAttribute("sort", sort);
         return "index";
     }

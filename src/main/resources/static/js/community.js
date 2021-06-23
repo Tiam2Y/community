@@ -152,3 +152,27 @@ function selectTag(e) {
         $("#tag").val(value);
     }
 }
+
+/**
+ * 删除帖子
+ */
+function deleteTalk(e) {
+    let talkId = e.getAttribute("data-id");
+    layer.confirm('确认删除该贴么？删除后将无法恢复！', function (index) {
+        layer.close(index);
+        $.post('/question/del/' + talkId, function (res) {
+            if (res.code === 200) {
+                layer.msg("删除成功");
+                setTimeout(function () {
+                    location.href = '/';
+                    // 这里就是处理的事件
+                }, 2000);
+            } else {
+                layer.alert(res.message, {
+                    skin: 'layui-layer-molv' //样式类名
+                    , closeBtn: 0
+                });
+            }
+        });
+    });
+}

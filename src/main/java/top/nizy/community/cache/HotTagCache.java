@@ -19,20 +19,23 @@ import java.util.PriorityQueue;
 @Data
 public class HotTagCache {
     //热门标签的缓存
-    private List<String> hots = new ArrayList<>();
+    private List<HotTagDTO> hots = new ArrayList<>();
 
     /**
      * 使用大小堆(PriorityQueue) 实现 TopN 算法
+     *
      * @param tags
      */
-    public void updateTags(Map<String, Integer> tags) {
-        int max = 3;
+    public void updateTags(Map<String, Integer> tags, Map<String, Long> talks, Map<String, Long> comments) {
+        int max = 10;
         PriorityQueue<HotTagDTO> priorityQueue = new PriorityQueue<>(max);
 
         tags.forEach((name, priority) -> {
             HotTagDTO hotTagDTO = new HotTagDTO();
             hotTagDTO.setName(name);
             hotTagDTO.setPriority(priority);
+            hotTagDTO.setTalkNums(talks.get(name));
+            hotTagDTO.setCommentNums(comments.get(name));
             if (priorityQueue.size() < max) {
                 priorityQueue.add(hotTagDTO);
             } else {
@@ -45,10 +48,10 @@ public class HotTagCache {
             }
         });
 
-        List<String> sortedTags = new ArrayList<>();
-        while(!priorityQueue.isEmpty()){
+        List<HotTagDTO> sortedTags = new ArrayList<>();
+        while (!priorityQueue.isEmpty()) {
             HotTagDTO poll = priorityQueue.poll();
-            sortedTags.add(0, poll.getName());
+            sortedTags.add(0, poll);
         }
         hots = sortedTags;
     }

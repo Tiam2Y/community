@@ -115,8 +115,19 @@
             <!--<a th:each="tag : ${tags}" th:href="@{/(page=1,search=${search},tag=${tag},sort=${sort})}"-->
             <!--   th:text="${tag}" class="community-tag"></a>-->
             <ul class="hot-tags">
-                <li th:each="tag : ${tags}" class="tag-list">
-                    <a th:href="@{/(page=1,search=${search},tag=${tag},sort=${sort})}" th:text="${tag}"></a>
+                <li th:each="hottag : ${hotTags}" class="tag-list">
+                    <span>
+                        <span class="label label-danger" aria-hidden="true">
+                            <a th:href="@{/(page=1,search=${search},tag=${hottag.name},sort=${sort})}"
+                               th:text="${hottag.name}" class="community-tag"></a>
+                        </span>
+                        <!--<a th:href="@{/(page=1,search=${search},tag=${hottag.name},sort=${sort})}"-->
+                        <!--   th:text="${hottag.name}"></a>-->
+                        <br>
+                        <span th:text="${hottag.talkNums}"></span> 个帖子 •
+                        <span th:text="${hottag.commentNums}"></span> 个评论
+                    </span>
+
                 </li>
             </ul>
         </div>
