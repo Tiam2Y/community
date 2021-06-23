@@ -34,12 +34,12 @@
                             <span class="glyphicon glyphicon-pencil"></span>编辑
                         </span>
                     </a>
-                    <span onclick="deleteTalk(this)" th:data-id="${question.id}" class="btn-margin"
+                    <a href="#" onclick="deleteTalk(this)" th:data-id="${question.id}" class="btn-margin"
                           th:if="${session.user != null && session.user.id == question.creator}">
                         <span class="label label-danger" aria-hidden="true">
                             <span class="glyphicon glyphicon-remove"></span>删除
                         </span>
-                    </span>
+                    </a>
                 </div>
                 <hr>
                 <!-- 实际的详情内容 -->

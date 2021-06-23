@@ -8,6 +8,8 @@ import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import top.nizy.community.exception.CustomizeErrorCode;
+import top.nizy.community.exception.CustomizeException;
 
 
 import java.io.File;
@@ -59,7 +61,7 @@ public class OSSProvider {
             //设置公开读权限
             ossClient.setBucketAcl(bucketName, CannedAccessControlList.PublicRead);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         } finally {
             if (ossClient != null) {
                 // 关闭OSSClient。

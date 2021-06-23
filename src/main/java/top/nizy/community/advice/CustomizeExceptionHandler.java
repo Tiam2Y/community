@@ -35,6 +35,7 @@ public class CustomizeExceptionHandler {
         if ("application/json".equals(contentType)) {
             //返回 JSON 而不是异常页面 -- 可以供用户及时修改 -- 可以进行交互
             if (ex instanceof CustomizeException) {
+                //已知异常
                 return ResultDTO.errorOf((CustomizeException) ex);
             } else {
                 log.error("handle error", ex);
