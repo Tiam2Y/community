@@ -31,6 +31,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
+
     </profiles>
 
 
@@ -58,6 +59,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
+        </dependency>
+        <!-- Spring 支持邮件发送-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>5.3.8</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
         </dependency>
 
         <!-- 解决启动服务时的 OkHttp 的jackson的警告 -->

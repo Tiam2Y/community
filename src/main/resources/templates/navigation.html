@@ -8,11 +8,15 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">交流社区</span>
-                </button>
-                <a class="navbar-brand" href="/">交流社区</a>
+                <!--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"-->
+                <!--        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">-->
+                <!--    <span class="sr-only"></span>-->
+                <!--</button>-->
+                <div class="login-logo">
+                    <!--<i class="iconfont icon-LOL-xiaguxianfeng login_ali_icon"></i>-->
+                    <b style="margin-top: 7px;"><a class="logo" href="/">Movie Talk</a></b>
+                </div>
+                <!--<a class="navbar-brand" href="/">交流社区</a>-->
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -37,8 +41,10 @@
                     </li>
                     <!-- 判断 如果 user==null 说明登录失败 -->
                     <li th:if="${session.user==null}">
-                        <a href="https://github.com/login/oauth/authorize?client_id=ad3aafde0ac9783ef322
-                &redirect_uri=http://localhost:8686/callback&scope=user&state=1">登陆</a>
+                        <a href="/login">登陆</a>
+                    </li>
+                    <li th:if="${session.user==null}">
+                        <a href="/register">注册</a>
                     </li>
                     <li class="dropdown" th:if="${session.user!=null}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"

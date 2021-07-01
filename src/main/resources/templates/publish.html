@@ -24,13 +24,13 @@
                 <!-- 提交 POST 时会一同被提交至服务器，但是不在页面上显示-->
                 <input type="hidden" name="id" th:value="${id}">
                 <div class="form-group">
-                    <label for="title">问题标题（简单扼要）:</label>
+                    <label for="title">标题（简单扼要）:</label>
                     <input type="text" class="form-control" id="title" name="title" th:value="${title}"
-                           placeholder="问题标题……"
+                           placeholder="问题标题……(必填)"
                            autocomplete="off">
                 </div>
                 <div class="form-group" id="question-editor" style="z-index: 2">
-                    <label for="description">问题补充 (必填，请参照指南提示):</label>
+                    <label for="description">内容描述 (必填，请参照指南提示):</label>
                     <!-- textarea 的回显需要使用 th:text=""  其余的使用 th:value="" -->
                     <textarea name="description" id="description" th:text="${description}" style="display:none;"
                               class="form-control"
@@ -46,7 +46,7 @@
                             path: "/js/lib/",
                             delay: 0,
                             watch: false,
-                            placeholder: "请输入描述",
+                            placeholder: "请输入详细描述(必填)",
                             imageUpload: true,  //实现图片上传
                             imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
                             imageUploadURL: "/file/upload"
@@ -57,7 +57,7 @@
                     <label for="tag">添加标签:</label>
                     <input type="text" class="form-control" th:value="${tag}" id="tag" name="tag"
                            autocomplete="off"
-                           placeholder="可自定义标签，以,号分隔"
+                           placeholder="(必填) 可自定义标签，以,号分隔"
                            onclick="showSelectTag()">
                     <div id="select-tag" class="publish-tag-tab">
                         <ul class="nav nav-tabs" role="tablist">
@@ -100,11 +100,12 @@
 
         <!-- 右侧那一列 -->
         <div class="col-lg-3 col-xs-12 col-sm-12 col-md-12">
-            <h3>发起指南</h3>
-            • 问题标题:<br/>
-            请用精简的语言描述您发布的问题，不超过25字<br/>
-            • 问题补充:<br/>
-            详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料<br/>
+            <h3>投稿指南</h3>
+            • 投稿标题:<br/>
+            请用精简的语言描述您的投稿, 不超过25字<br/>
+            • 内容描述:<br/>
+            详细描述一下这个片单吧, 可提供一些相关影视截图;
+            每个图片不要超过5M, 整个片单不要超过10M <br/>
             • 选择标签:<br/>
             选择一个或者多个合适的标签，用逗号隔开，每个标签不超过10个字<br/>
         </div>

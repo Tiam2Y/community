@@ -16,29 +16,29 @@ public class TagCache {
     public static List<TagDTO> get() {
         List<TagDTO> tagDTOS = new ArrayList<>();
         TagDTO program = new TagDTO();
-        program.setCategoryName("开发语言");
-        program.setTags(Arrays.asList("javascript", "php", "css", "html", "html5", "java", "node.js", "python", "c++", "c", "golang", "objective-c", "typescript", "shell", "swift", "c#", "sass", "ruby", "bash", "less", "asp.net", "lua", "scala", "coffeescript", "actionscript", "rust", "erlang", "perl"));
+        program.setCategoryName("形式");
+        program.setTags(Arrays.asList("电影", "电视剧", "动漫", "纪录片", "短片"));
         tagDTOS.add(program);
 
         TagDTO framework = new TagDTO();
-        framework.setCategoryName("平台框架");
-        framework.setTags(Arrays.asList("laravel", "spring", "express", "django", "flask", "yii", "ruby-on-rails", "tornado", "koa", "struts"));
+        framework.setCategoryName("类型");
+        framework.setTags(Arrays.asList("喜剧", "动作", "爱情", "科幻", "悬疑", "犯罪", "历史"));
         tagDTOS.add(framework);
 
 
         TagDTO server = new TagDTO();
-        server.setCategoryName("服务器");
-        server.setTags(Arrays.asList("linux", "nginx", "docker", "apache", "ubuntu", "centos", "缓存 tomcat", "负载均衡", "unix", "hadoop", "windows-server"));
+        server.setCategoryName("地区");
+        server.setTags(Arrays.asList("中国", "欧美", "日韩", "英国", "法国", "德国"));
         tagDTOS.add(server);
 
         TagDTO db = new TagDTO();
-        db.setCategoryName("数据库");
-        db.setTags(Arrays.asList("mysql", "redis", "mongodb", "sql", "oracle", "nosql memcached", "sqlserver", "postgresql", "sqlite"));
+        db.setCategoryName("年代");
+        db.setTags(Arrays.asList("2021", "2020", "2010年代", "2000年代", "90年代", "更早"));
         tagDTOS.add(db);
 
         TagDTO tool = new TagDTO();
-        tool.setCategoryName("开发工具");
-        tool.setTags(Arrays.asList("git", "github", "visual-studio-code", "vim", "sublime-text", "xcode intellij-idea", "eclipse", "maven", "ide", "svn", "visual-studio", "atom emacs", "textmate", "hg"));
+        tool.setCategoryName("特色");
+        tool.setTags(Arrays.asList("经典", "青春", "文艺", "搞笑", "励志", "魔幻"));
         tagDTOS.add(tool);
         return tagDTOS;
     }
