@@ -1,9 +1,10 @@
 ## What is this
-学习使用 Spring Boot 搭建一个问答社区的项目
+学习使用 Spring Boot 搭建一个影视交流的项目 -- 影谈(Movie Talk)
 
 
 ### 一些常用命令
 [数据库版本更新]
+
 ```
 mvn flyway:migrate
 ```
