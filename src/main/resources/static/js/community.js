@@ -44,7 +44,7 @@ function comment2target(targetId, type, content) {
                 if (response.code === 2003) {
                     let isAccepted = confirm(response.message);
                     if (isAccepted) {
-                        window.open("https://github.com/login/oauth/authorize?client_id=ad3aafde0ac9783ef322&redirect_uri=" + document.location.origin + "/callback&scope=user&state=1");
+                        window.open(document.location.origin+"/login")
                         window.localStorage.setItem("closable", "true");
                     }
                 } else {
