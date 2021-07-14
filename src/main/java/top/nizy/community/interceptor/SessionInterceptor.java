@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import top.nizy.community.mapper.UserMapper;
-import top.nizy.community.model.Notification;
 import top.nizy.community.model.User;
 import top.nizy.community.model.UserExample;
 import top.nizy.community.service.NotificationService;
