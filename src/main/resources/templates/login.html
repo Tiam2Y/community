@@ -48,14 +48,18 @@
                     </div>
                 </form>
             </div>
+            <!-- 第三方登录 -->
             <div class="login-right col-lg-4 col-md-4 col-sm-4 col-xs-4">
                 <div class="login-other-all">
                     <h4>Third party login</h4>
-                    <a class="login-other"
-                       th:href="@{'https://github.com/login/oauth/authorize?client_id=ad3aafde0ac9783ef322&redirect_uri=http://localhost:8686/callback&scope=user&state=1'}">
-                        <img src="/images/github.svg" class="login-icon">
-                        Github
-                    </a>
+                    <div class="OAuth" style="text-align: center">
+                        <a th:href="@{https://gitee.com/oauth/authorize(client_id='c7a4f5cc8f6678674ea967d4a10a8e5f52e64904440ddf283c278b4097971271',redirect_uri=${#httpServletRequest.getServletContext().getAttribute('giteeRedirectUri')},response_type='code')}">
+                            <img src="/images/gitee.svg" class="third-login">
+                        </a>
+                        <a th:href="@{https://github.com/login/oauth/authorize(client_id='ad3aafde0ac9783ef322',redirect_uri=${#httpServletRequest.getServletContext().getAttribute('githubRedirectUri')},scope='user',state=1)}">
+                            <img src="/images/github.svg" class="third-login">
+                        </a>
+                    </div>
                 </div>
 
             </div>

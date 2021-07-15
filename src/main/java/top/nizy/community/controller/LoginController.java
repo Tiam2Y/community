@@ -16,6 +16,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * @Classname AuthorizeController
+ * @Description 本身网站的通过注册的用户的登陆
+ * @Date 2021/6/3 15:09
+ * @Created by NZY271
+ */
+
 @Controller
 public class LoginController {
     @Autowired(required = false)
@@ -55,5 +62,17 @@ public class LoginController {
             model.addAttribute("loginFail", "fail");
             return "login";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response) {
+        //删除session中的特定信息
+        request.getSession().removeAttribute("user");
+        //删除特定的 Cookie
+        Cookie token = new Cookie("token", null);
+        token.setMaxAge(0); //立即删除
+        response.addCookie(token);
+        return "redirect:/";
     }
 }

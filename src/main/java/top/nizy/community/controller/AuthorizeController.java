@@ -2,15 +2,15 @@ package top.nizy.community.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import top.nizy.community.dto.AccessTokenDTO;
-import top.nizy.community.dto.GithubUser;
 import top.nizy.community.model.User;
-import top.nizy.community.provider.GithubProvider;
 import top.nizy.community.service.UserService;
+import top.nizy.community.strategy.LoginStrategyFactory;
+import top.nizy.community.strategy.LoginUserInfo;
+import top.nizy.community.strategy.OAuthLoginStrategy;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ import java.util.UUID;
 
 /**
  * @Classname AuthorizeController
- * @Description TODO
+ * @Description 授权用户登陆的控制器 -- 第三方登录
  * @Date 2021/6/3 15:09
  * @Created by NZY271
  */
@@ -30,68 +30,38 @@ import java.util.UUID;
 @Controller
 @Slf4j  //lombok 中用于日志追加
 public class AuthorizeController {
+
     @Autowired
-    private GithubProvider githubProvider;
-    @Value("${github.client.id}")
-    private String clientId;
-    @Value("${github.client.secret}")
-    private String clientSecret;
-    @Value("${github.redirect.uri}")
-    private String redirectUri;
+    private LoginStrategyFactory loginStrategyFactory;
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/callback")
-    public String callback(@RequestParam(name = "code") String code,
-                           @RequestParam(name = "state") String state,
-                           HttpServletResponse response) {
-        AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
-        //此处设置的是 绑定的这个 Application 的所有者的信息
-        accessTokenDTO.setClient_id(clientId);
-        accessTokenDTO.setClient_secret(clientSecret);
-        accessTokenDTO.setCode(code);
-        accessTokenDTO.setState(state);
-        accessTokenDTO.setRedirect_uri(redirectUri);
-        String accessToken = githubProvider.getAccessToken(accessTokenDTO);
-        GithubUser githubUser = githubProvider.getUser(accessToken);
-        if (githubUser != null && githubUser.getId() != null) {
-            //登陆成功
+    @GetMapping("/callback/{type}")
+    public String newCallback(@PathVariable(name = "type") String type,
+                              @RequestParam(name = "code") String code,
+                              @RequestParam(name = "state", required = false) String state,
+                              HttpServletResponse response) {
+        OAuthLoginStrategy loginStrategy = loginStrategyFactory.getStrategy(type);
+        LoginUserInfo loginUserInfo = loginStrategy.getUser(code, state);
+        if (loginUserInfo != null && loginUserInfo.getId() != null) {
             User user = new User();
-            //自定义生成一个 token -- 然后将其放入 Cookies 中
-            //作为之后持久化登陆的一个验证(口令)
             String token = UUID.randomUUID().toString();
-            //将登陆的用户信息 存入数据库中(因此不用做session？)
             user.setToken(token);
-            user.setName(githubUser.getName());
-            user.setAccountId(String.valueOf(githubUser.getId()));
-            user.setAvatarUrl(githubUser.getAvatarUrl());
-            //在数据库中创建或者修改用户信息
+            user.setName(loginUserInfo.getName());
+            user.setAccountId(String.valueOf(loginUserInfo.getId()));
+            user.setType(type); //设置了用于的 type
+            user.setAvatarUrl(loginUserInfo.getAvatarUrl());
             userService.createOrUpdate(user);
-
-            //响应
             Cookie cookie = new Cookie("token", token);
-            //设置 Cookie 生命周期 -- 单位 s -- 如下设置为1个月
-            cookie.setMaxAge(60 * 60 * 24 * 30);
-            response.addCookie(cookie);//--通知客户端保存 Cookies
+            cookie.setMaxAge(60 * 60 * 24 * 30 * 6);
+            cookie.setPath("/");
+            response.addCookie(cookie);
             return "redirect:/";
         } else {
-            //登陆失败，重新登陆
-            log.error("callback get github error,{}", githubUser);
+            log.error("callback get error,{}", loginUserInfo);
+            // 登录失败，重新登录
             return "redirect:/";
         }
     }
-
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request,
-                         HttpServletResponse response) {
-        //删除session中的特定信息
-        request.getSession().removeAttribute("user");
-        //删除特定的 Cookie
-        Cookie token = new Cookie("token", null);
-        token.setMaxAge(0); //立即删除
-        response.addCookie(token);
-        return "redirect:/";
-    }
-
 }

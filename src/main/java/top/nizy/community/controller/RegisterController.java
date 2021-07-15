@@ -18,6 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+/**
+ * @Classname AuthorizeController
+ * @Description 本身网站的注册请求处理
+ * @Date 2021/6/3 15:09
+ * @Created by NZY271
+ */
 @Controller
 public class RegisterController {
     @Autowired(required = false)
@@ -44,11 +50,13 @@ public class RegisterController {
             if (cookie.getName().equals("activeCode")) {
                 String value = cookie.getValue();
                 if (value.equals(code)) {
+                    //说明注册成功
                     user.setStatus(1);
                     break;
                 }
             }
         }
+        //说明注册 成功
         if (user.getStatus() == 1) {
             user.setName(username);
             user.setPassword(password);
@@ -66,7 +74,7 @@ public class RegisterController {
 
     @ResponseBody
     @GetMapping("/sendActiveEmail/{email}")
-    public ResultDTO sendActiveEmail(@PathVariable(name = "email") String email, HttpServletResponse response) {
+    public ResultDTO<Object> sendActiveEmail(@PathVariable(name = "email") String email, HttpServletResponse response) {
         //使用cookie存储验证码用于校验
         UserExample userExample = new UserExample();
         userExample.createCriteria()

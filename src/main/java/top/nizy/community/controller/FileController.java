@@ -13,6 +13,7 @@ import top.nizy.community.provider.OSSProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.util.Objects;
 
 /**
  * @Classname FileController
@@ -62,9 +63,8 @@ public class FileController {
         if (file.equals("") || file.getSize() <= 0) {
             file = null;
         } else {
-            InputStream ins = null;
-            ins = file.getInputStream();
-            toFile = new File(file.getOriginalFilename());
+            InputStream ins = file.getInputStream();
+            toFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
             inputStreamToFile(ins, toFile);
             ins.close();
         }
@@ -93,7 +93,7 @@ public class FileController {
     public void deleteTempFile(File file) {
         if (file != null) {
             File del = new File(file.toURI());
-            boolean delete = del.delete();
+            del.delete();
         }
     }
 }

@@ -1,6 +1,8 @@
 package top.nizy.community.interceptor;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,16 +32,25 @@ public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
     private NotificationService notificationService;
 
+    @Value("${gitee.redirect.uri}")
+    private String giteeRedirectUri;
+    @Value("${github.redirect.uri}")
+    private String githubRedirectUri;
+
+
     //需要实现三个方法
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //设置 context 级别的属性
+        request.getServletContext().setAttribute("giteeRedirectUri", giteeRedirectUri);
+        request.getServletContext().setAttribute("githubRedirectUri", githubRedirectUri);
         //需要获取 Cookie 来判断用户是否是已登录的
         //使用 request 来获取 Cookies
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
+        if (cookies != null && cookies.length != 0) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
+                if (cookie.getName().equals("token") && StringUtils.isNotBlank(cookie.getValue())) {
                     String token = cookie.getValue();
                     UserExample userExample = new UserExample();
                     //创建 标准 -- 即向SQL语句中添加条件

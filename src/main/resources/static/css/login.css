@@ -334,6 +334,10 @@ body {
     height: 20px;
 }
 
+.third-login {
+    width: 30%;
+}
+
 .login-page-footer {
     height: 70px;
     line-height: 70px;
@@ -419,6 +423,7 @@ body {
 .article-modal-content {
     background-color: #eee;
 }
+
 .login_ali_icon {
     font-size: 20px;
 }

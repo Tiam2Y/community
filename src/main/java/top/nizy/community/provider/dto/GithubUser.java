@@ -1,4 +1,4 @@
-package top.nizy.community.dto;
+package top.nizy.community.provider.dto;
 
 import lombok.Data;
 
@@ -12,6 +12,5 @@ import lombok.Data;
 public class GithubUser {
     private String name;
     private Long id;    //这个Github的ID是唯一的
-    private String bio;
     private String avatarUrl;
 }

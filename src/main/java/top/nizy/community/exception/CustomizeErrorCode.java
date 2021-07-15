@@ -23,6 +23,8 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     NOTIFICATION_NOT_FOUND(2009, "消息莫非是不翼而飞了？"),
     QUESTION_DELETED(2010, "帖子已删除，或您无权删除"),
     FILE_UPLOAD_FAIL(2011, "图片上传失败"),
+    OAUTH_LOGIN_TIMEOUT(2012, "第三方登陆超时"),
+    OAUTH_FAIL(2013, "授权失败")
 //    INVALID_INPUT(2011, "非法输入"),
 //    INVALID_OPERATION(2012, "兄弟，是不是走错房间了？"),
     ;
