@@ -26,7 +26,7 @@ public class UserService {
     @Autowired
     private RandomCodeService randomCodeService;
 
-    public void createOrUpdate(User user) {
+    public Long createOrUpdate(User user) {
         //获取数据库中的 user
         UserExample userExample = new UserExample();
         userExample.createCriteria()
@@ -38,6 +38,7 @@ public class UserService {
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             userMapper.insert(user);
+            return user.getId();
         } else {
             //更新
             User dbUser = dbUsers.get(0);   //用于获取需要更新的数据在数据库中的ID(即where语句)
@@ -52,6 +53,7 @@ public class UserService {
             example.createCriteria()
                     .andIdEqualTo(dbUser.getId());
             userMapper.updateByExampleSelective(updateUser, example);
+            return dbUser.getId();
         }
     }
 
@@ -63,8 +65,8 @@ public class UserService {
         //上面的激活码发送到用户注册邮箱
         //  String context = "<a href=\"http://localhost:8887/checkCode?code="+code+"\">激活请点击:"+code+"</a>";
 //        String context = "<a href=\"\">Please complete in 5 minutes " + character + ":" + code + "</a>";
-        String context = "亲爱的用户：您好！感谢您使用 Movie Talk (影谈交流社区)。\n 您正在进行邮箱验证，请在验证码输入框中输入此次验证码(" + character +")：" + code+
-        "以完成验证。\n 如非本人操作，请忽略此邮件，由此给您带来的不便请谅解！";
+        String context = "亲爱的用户：您好！感谢您使用 Movie Talk (影谈交流社区)。\n 您正在进行邮箱验证，请在验证码输入框中输入此次验证码(" + character + ")：" + code +
+                "以完成验证。\n 如非本人操作，请忽略此邮件，由此给您带来的不便请谅解！";
         //发送激活邮件
         mailService.sendMimeMail(email, subject, context);
         return code;

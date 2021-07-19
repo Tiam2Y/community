@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import top.nizy.community.dto.CommentDTO;
 import top.nizy.community.dto.QuestionDTO;
 import top.nizy.community.dto.ResultDTO;
+import top.nizy.community.dto.UserDTO;
 import top.nizy.community.enums.CommentTypeEnum;
 import top.nizy.community.exception.CustomizeErrorCode;
 import top.nizy.community.exception.CustomizeException;
 import top.nizy.community.mapper.QuestionMapper;
+import top.nizy.community.model.Question;
 import top.nizy.community.model.User;
 import top.nizy.community.service.CommentService;
 import top.nizy.community.service.QuestionService;
@@ -62,8 +64,9 @@ public class QuestionController {
     public Object delQuestionById(HttpServletRequest request,
                                   @PathVariable(name = "id") Long id) {
 
-        User user = (User) request.getSession().getAttribute("user");
-        if (user == null) {
+        UserDTO user = (UserDTO) request.getSession().getAttribute("user");
+        Question question = questionMapper.selectByPrimaryKey(id);
+        if (user == null || !user.getId().equals(question.getCreator())) {
             throw new CustomizeException(CustomizeErrorCode.NO_LOGIN);
         }
         if (id == null) {

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.nizy.community.dto.NotificationDTO;
 import top.nizy.community.dto.PaginationDTO;
+import top.nizy.community.dto.UserDTO;
 import top.nizy.community.enums.NotificationStatusEnum;
 import top.nizy.community.enums.NotificationTypeEnum;
 import top.nizy.community.exception.CustomizeErrorCode;
@@ -78,7 +79,7 @@ public class NotificationService {
         return notificationMapper.countByExample(notificationExample);
     }
 
-    public NotificationDTO read(Long id, User user) {
+    public NotificationDTO read(Long id, UserDTO user) {
         Notification notification = notificationMapper.selectByPrimaryKey(id);
         if (notification == null) {
             throw new CustomizeException(CustomizeErrorCode.NOTIFICATION_NOT_FOUND);

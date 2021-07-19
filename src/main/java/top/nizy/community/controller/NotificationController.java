@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.nizy.community.dto.NotificationDTO;
+import top.nizy.community.dto.UserDTO;
 import top.nizy.community.enums.NotificationTypeEnum;
 import top.nizy.community.model.User;
 import top.nizy.community.service.NotificationService;
@@ -29,7 +30,7 @@ public class NotificationController {
     public String profile(HttpServletRequest request,
                           @PathVariable(name = "id") Long id) {
 
-        User user = (User) request.getSession().getAttribute("user");
+        UserDTO user = (UserDTO) request.getSession().getAttribute("user");
         if (user == null) {
             return "redirect:/";
         }

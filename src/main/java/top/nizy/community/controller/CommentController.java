@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import top.nizy.community.dto.CommentCreateDTO;
 import top.nizy.community.dto.CommentDTO;
 import top.nizy.community.dto.ResultDTO;
+import top.nizy.community.dto.UserDTO;
 import top.nizy.community.enums.CommentTypeEnum;
 import top.nizy.community.exception.CustomizeErrorCode;
 import top.nizy.community.model.Comment;
@@ -43,7 +44,7 @@ public class CommentController {
     public Object post(@RequestBody CommentCreateDTO commentCreateDTO,
                        HttpServletRequest request) {
 
-        User user = (User) request.getSession().getAttribute("user");
+        UserDTO user = (UserDTO) request.getSession().getAttribute("user");
         if (user == null) {
             return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
         }

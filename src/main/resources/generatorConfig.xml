@@ -38,7 +38,10 @@
         </javaClientGenerator>
 
         <!-- 与数据库中的 表 进行配置-->
-        <table tableName="user" domainObjectName="User"></table>
+        <table tableName="user" domainObjectName="User">
+            <!--使得插入后可以返回自增列-->
+            <generatedKey column="id" sqlStatement="MySql" identity="true"></generatedKey>
+        </table>
         <table tableName="question" domainObjectName="Question"></table>
         <table tableName="comment" domainObjectName="Comment"></table>
         <table tableName="notification" domainObjectName="Notification"></table>

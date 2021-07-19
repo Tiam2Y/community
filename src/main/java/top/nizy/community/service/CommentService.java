@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.nizy.community.dto.CommentDTO;
+import top.nizy.community.dto.UserDTO;
 import top.nizy.community.enums.CommentTypeEnum;
 import top.nizy.community.enums.NotificationStatusEnum;
 import top.nizy.community.enums.NotificationTypeEnum;
@@ -49,7 +50,7 @@ public class CommentService {
     //用来处理数据库事务的Spring注解 -- 可以注解在任何方法前
     //默认在出现任何异常时 回滚
     @Transactional
-    public void insert(Comment comment, User creator) {
+    public void insert(Comment comment, UserDTO creator) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import top.nizy.community.dto.NotificationDTO;
 import top.nizy.community.dto.PaginationDTO;
 import top.nizy.community.dto.QuestionDTO;
+import top.nizy.community.dto.UserDTO;
 import top.nizy.community.model.User;
 import top.nizy.community.service.NotificationService;
 import top.nizy.community.service.QuestionService;
@@ -40,14 +41,14 @@ public class ProfileController {
                           @RequestParam(name = "page", defaultValue = "1") Integer page,
                           @RequestParam(name = "size", defaultValue = "5") Integer size) {
 
-        User user = (User) request.getSession().getAttribute("user");
+        UserDTO user = (UserDTO) request.getSession().getAttribute("user");
         if (user == null) {
             return "redirect:/";
         }
 
         if ("questions".equals(action)) {
             model.addAttribute("section", "questions");
-            model.addAttribute("sectionName", "我的提问");
+            model.addAttribute("sectionName", "我的投稿");
             //希望可以根据用户查到与其相关的问题
             PaginationDTO<QuestionDTO> pagination = questionService.list(user.getId(), page, size);
             model.addAttribute("pagination", pagination);

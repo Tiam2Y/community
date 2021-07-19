@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.nizy.community.cache.TagCache;
 import top.nizy.community.dto.QuestionDTO;
+import top.nizy.community.dto.UserDTO;
 import top.nizy.community.model.Question;
 import top.nizy.community.model.User;
 import top.nizy.community.service.QuestionService;
@@ -38,10 +39,10 @@ public class PublishController {
 
         //根据 ID 获取到这条发布信息
         QuestionDTO question = questionService.getById(id);
-        User user = (User) request.getSession().getAttribute("user");
+        UserDTO user = (UserDTO) request.getSession().getAttribute("user");
 
         //拦截，不是创建者，不能修改
-        if (question.getCreator().longValue() != user.getId().longValue()) {
+        if (!question.getCreator().equals(user.getId())) {
             return "redirect:/";
         }
 
@@ -91,7 +92,7 @@ public class PublishController {
             return "publish";
         }
 
-        User user = (User) request.getSession().getAttribute("user");
+        UserDTO user = (UserDTO) request.getSession().getAttribute("user");
         if (user == null) {
             model.addAttribute("error", "用户未登录");
             return "publish";

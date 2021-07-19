@@ -1,14 +1,18 @@
 package top.nizy.community.controller;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import top.nizy.community.dto.UserDTO;
 import top.nizy.community.mapper.UserMapper;
 import top.nizy.community.model.User;
 import top.nizy.community.model.UserExample;
 import top.nizy.community.service.NotificationService;
+import top.nizy.community.utils.CookieUtils;
+import top.nizy.community.utils.TokenUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +34,11 @@ public class LoginController {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private TokenUtils tokenUtils;
+    @Autowired
+    private CookieUtils cookieUtils;
+
     @GetMapping("/login")
     public String LoginPage() {
         return "login";
@@ -48,14 +57,16 @@ public class LoginController {
         List<User> users = userMapper.selectByExample(userExample);
         if (users != null && users.size() != 0) {
             User user = users.get(0);
-            String token = UUID.randomUUID().toString();
-            user.setToken(token);
+            String token_temp = UUID.randomUUID().toString();
+            user.setToken(token_temp);
             userMapper.updateByPrimaryKey(user);
-            Cookie cookie = new Cookie("token", token);
-            cookie.setPath("/");
-            if (rememberFlag != null) {
-                cookie.setMaxAge(60 * 60 * 24);
-            }
+            UserDTO userDTO = new UserDTO();
+            BeanUtils.copyProperties(user, userDTO);
+            Long secTime = 60 * 60 * 24 * 6L;//6天
+            String token = tokenUtils.getToken(userDTO, secTime * 1000);
+            Cookie cookie = cookieUtils.getCookie("token", token, secTime.intValue());
+            if(rememberFlag==null)
+                cookie.setMaxAge(-1);//没有则是默认
             response.addCookie(cookie);
             return "redirect:/";
         } else {

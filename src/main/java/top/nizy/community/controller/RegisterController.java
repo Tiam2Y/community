@@ -39,7 +39,7 @@ public class RegisterController {
     }
 
     @PostMapping("/register")
-    public String registering(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String registering(HttpServletRequest request, Model model) {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String code = request.getParameter("code");
@@ -63,6 +63,7 @@ public class RegisterController {
             user.setAccountId(email);
             user.setEmail(email);
             user.setAvatarUrl("/images/Xaccount.png");
+            user.setType("self");
             userService.createOrUpdate(user);
             model.addAttribute("signupSuccess", "success");
             return "login";

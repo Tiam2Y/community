@@ -6,10 +6,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import top.nizy.community.dto.ResultDTO;
+import top.nizy.community.dto.UserDTO;
 import top.nizy.community.mapper.UserMapper;
 import top.nizy.community.model.User;
 import top.nizy.community.model.UserExample;
 import top.nizy.community.service.NotificationService;
+import top.nizy.community.utils.TokenUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +34,8 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private TokenUtils tokenUtils;
 
     @Value("${gitee.redirect.uri}")
     private String giteeRedirectUri;
@@ -52,18 +57,15 @@ public class SessionInterceptor implements HandlerInterceptor {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("token") && StringUtils.isNotBlank(cookie.getValue())) {
                     String token = cookie.getValue();
-                    UserExample userExample = new UserExample();
-                    //创建 标准 -- 即向SQL语句中添加条件
-                    userExample.createCriteria()
-                            .andTokenEqualTo(token);
-                    List<User> users = userMapper.selectByExample(userExample);
-                    if (users.size() != 0) {
-                        //说明数据库保留了该登陆过的用户
-                        //在Session中写入该用户信息--在页面展示
-                        HttpSession session = request.getSession();
-                        session.setAttribute("user", users.get(0));
-                        Long unreadCount = notificationService.unreadCount(users.get(0).getId());
-                        session.setAttribute("unreadCount", unreadCount);
+                    if(token != null){
+                        ResultDTO<Object> resultDTO = tokenUtils.verifyToken(token);
+                        if (resultDTO.getCode() == 200) {
+                            UserDTO userDTO = (UserDTO) resultDTO.getData();
+                            HttpSession session = request.getSession();
+                            session.setAttribute("user", userDTO);
+                            Long unreadCount = notificationService.unreadCount(userDTO.getId());
+                            session.setAttribute("unreadCount", unreadCount);
+                        }
                     }
                     break;
                 }
