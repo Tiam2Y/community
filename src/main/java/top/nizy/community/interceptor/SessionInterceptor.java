@@ -6,11 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 import top.nizy.community.dto.ResultDTO;
 import top.nizy.community.dto.UserDTO;
-import top.nizy.community.mapper.UserMapper;
-import top.nizy.community.model.User;
-import top.nizy.community.model.UserExample;
 import top.nizy.community.service.NotificationService;
 import top.nizy.community.utils.TokenUtils;
 
@@ -18,7 +16,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.List;
+
 
 /**
  * @Classname SessionInterceptor
@@ -29,8 +27,8 @@ import java.util.List;
 @Service //使Spring可以对其进行接管,才能自动注入 UserMapper
 public class SessionInterceptor implements HandlerInterceptor {
 
-    @Autowired(required = false)
-    private UserMapper userMapper;
+//    @Autowired(required = false)
+//    private UserMapper userMapper;
 
     @Autowired
     private NotificationService notificationService;
@@ -47,6 +45,8 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (handler instanceof ResourceHttpRequestHandler)
+            return true;
         //设置 context 级别的属性
         request.getServletContext().setAttribute("giteeRedirectUri", giteeRedirectUri);
         request.getServletContext().setAttribute("githubRedirectUri", githubRedirectUri);
